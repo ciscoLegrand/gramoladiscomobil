@@ -62,5 +62,12 @@ group :development do
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+  gem 'rspec-rails', '~> 5.0'
+  gem 'shoulda-matchers', '~> 4.5'
+  gem 'factory_bot_rails', '~> 6.1'
+  gem 'faker', '~> 2.18'
+  gem 'letter_opener', '~> 1.7'
+  gem 'database_cleaner', '~> 2.0'
 end
 
+gem 'simplecov', '~> 0.21.2'
