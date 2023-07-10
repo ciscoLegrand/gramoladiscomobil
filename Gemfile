@@ -76,3 +76,4 @@ end
 
 gem 'simplecov', '~> 0.21.2'
 gem "figaro"
+gem 'view_component'

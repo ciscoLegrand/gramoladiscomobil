@@ -21,17 +21,24 @@ Bundler.require(*Rails.groups)
 module Gramoladiscomobil
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.0
+    config.load_defaults Rails::VERSION::STRING.to_f
 
-    # Configuration for the application, engines, and railties goes here.
-    #
-    # These settings can be overridden in specific environments using the files
-    # in config/environments, which are processed later.
-    #
-    # config.time_zone = "Central Time (US & Canada)"
-    # config.eager_load_paths << Rails.root.join("extras")
+    config.exceptions_app = ->(env) { ErrorsController.action(:show).call(env) }
 
-    # Don't generate system test files.
-    config.generators.system_tests = nil
+    config.time_zone = 'Europe/Madrid'
+
+    config.i18n.available_locales = %i[es en]
+    config.i18n.default_locale = :es
+    config.i18n.fallbacks = true
+    config.generators do |gen|
+      gen.assets            false
+      gen.helper            false
+      gen.test_framework    :rspec
+      gen.jbuilder          false
+      gen.orm               :active_record, primary_key_type: :uuid
+      gen.system_tests      false
+    end
+    # to use component previews in tests
+    config.view_component.preview_paths << Rails.root.join('/spec/components/previews')
   end
 end
