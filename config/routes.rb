@@ -17,7 +17,11 @@ Rails.application.routes.draw do
               },
               controllers: { 
                 registrations: 'users/registrations',
-                sessions: 'users/sessions'
+                sessions: 'users/sessions',
+                confirmations: 'users/confirmations',
+                passwords: 'users/passwords',
+                omnuauth_callbacks: 'users/omniauth_callbacks',
+                unlocks: 'users/unlocks'
               }
 
 end
