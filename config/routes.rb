@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :products
   root 'pages#index'
   devise_scope :user do
     get ':role/profile', to: 'devise/registrations#edit', as: :profile
