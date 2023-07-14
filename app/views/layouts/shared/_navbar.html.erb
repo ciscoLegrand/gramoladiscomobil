@@ -25,17 +25,22 @@
             <%= link_to 'Home', root_path, class: 'w-fit max-w-auto font-semibold hover:text-gray-600 dark:hover:text-gray-500 hover:border-b-2 transition-colors hover:border-b-slate-800 text-slate-900 px-4 py-2 duration-500 hover:duration-500 dark:border-b-slate-200 dark:hover:border-b-slate-400 dark:text-white dark:hover:text-slate-900' %>
           </li>
           <!-- Elemento de la lista con dropdown -->
+          <% Category.all.each do |category| %>
           <li>
-            <button data-action="navbar#toggleCatSubmenu" class="relative z-10 block self-center font-semibold hover:text-gray-600 dark:hover:text-gray-500 transition-colors hover:bg-slate-800 text-slate-900 hover:text-white px-4 py-2 duration-500 hover:duration-500 dark:border-slate-200 dark:hover:bg-slate-400 dark:text-white dark:hover:text-slate-900">
-              Cabinas
-            </button>
+              <%= link_to category.name.capitalize, 
+                          category, 
+                          data: {
+                            action: "navbar#toggleCatSubmenu",
+                          },
+                          class: 'relative z-10 block self-center font-semibold hover:text-gray-600 dark:hover:text-gray-500 transition-colors hover:bg-slate-800 text-slate-900 hover:text-white px-4 py-2 duration-500 hover:duration-500 dark:border-slate-200 dark:hover:bg-slate-400 dark:text-white dark:hover:text-slate-900 capitalize'  %>
             <ul data-navbar-target="categorySubmenu" class="fixed right-1 top-32 lg:top-20 xl:top-14 z-50 p-6 hidden mt-2 w-screen grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 bg-white rounded-md shadow-xl dark:bg-gray-800">
-                <li class="col-span-1 flex justify-between items-center gap-8 ">
-                  <%= link_to 'cabinas', '', class: 'w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-500 hover:bg-slate-50 cursor-pointer'%>
-                </li>
+              <li class="col-span-1 flex justify-between items-center gap-8">
+                <%= link_to 'cabinas', '', class: 'w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-500 hover:bg-slate-50 cursor-pointer' %>
+              </li>
               <!-- más elementos del submenú -->
             </ul>
           </li>
+          <% end %>
           <!-- más elementos de la lista -->
           <li>
             <%= link_to 'Listas', '', class: 'w-fit max-w-auto font-semibold hover:text-gray-600 dark:hover:text-gray-500 transition-colors hover:bg-slate-800 text-slate-900 hover:text-white px-4 py-2 duration-500 hover:duration-500 dark:border-slate-200 dark:hover:bg-slate-400 dark:text-white dark:hover:text-slate-900' %>
