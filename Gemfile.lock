@@ -274,12 +274,13 @@ DEPENDENCIES
   inline_svg
   jbuilder
   letter_opener (~> 1.7)
-  mini_magick (~> 4.11)
+  mini_magick
   pg (~> 1.1)
   puma (~> 5.0)
   rails (~> 7.0.4, >= 7.0.4.3)
   redis (~> 4.0)
   rspec-rails (~> 5.0)
+  ruby-vips
   shoulda-matchers (~> 4.5)
   simplecov (~> 0.21.2)
   sprockets-rails
