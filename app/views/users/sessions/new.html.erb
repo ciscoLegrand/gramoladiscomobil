@@ -26,13 +26,22 @@
           <%#= f.label :remember_me %>
         </div>
       <% end %>
-    <div class="flex items-center justify-between">
-      <div class="flex items-center">
-        <button class="bg-blue-500 text-white rounded-lg px-4 py-2 mx-2">Facebook</button>
-        <button class="bg-red-500 text-white rounded-lg px-4 py-2 mx-2">Google</button>
-        <button class="bg-blue-400 text-white rounded-lg px-4 py-2 mx-2">Twitter</button>
+    <div class="flex flex-col justify-between items-between gap-8">
+      <div class="flex justify-between items-center gap-4">
+        <button class="flex justify-start items-center bg-blue-500 text-white rounded-lg px-4 py-2 mx-2 gap-4">
+          <%= inline_svg_tag 'icons/login/facebook.svg', class: 'h-4 w-4'%>
+          Facebook
+        </button>
+        <button class="flex justify-start items-center bg-red-500 text-white rounded-lg px-4 py-2 mx-2 gap-4">
+          <%= inline_svg_tag 'icons/login/google.svg', class: 'h-4 w-4'%>
+          Google
+        </button>
+        <button class="flex justify-start items-center bg-blue-400 text-white rounded-lg px-4 py-2 mx-2 gap-4">
+          <%= inline_svg_tag 'icons/login/twitter.svg', class: 'h-4 w-4'%>
+          Twitter
+        </button>
       </div>
-      <div class="text-sm">
+      <div class="text-sm flex flex-col gap-2">
         <%= render "devise/shared/links" %>
       </div>
     </div>
