@@ -22,35 +22,34 @@
         <ul class="flex flex-col justify-center items-center font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
           <!-- User options -->
           <li>
-            <%= link_to 'Home', root_path, class: 'w-fit max-w-auto font-semibold hover:text-gray-600 dark:hover:text-gray-500 hover:border-b-2 transition-colors hover:border-b-slate-800 text-slate-900 px-4 py-2 duration-500 hover:duration-500 dark:border-b-slate-200 dark:hover:border-b-slate-400 dark:text-white dark:hover:text-slate-900' %>
+            <%= active_link_to 'Home', root_path, class: 'nav-link' %>
           </li>
           <% Category.where(main: true).each do |category|%>
-            <%= link_to category.name.capitalize, 
-              category_products_path(category),
-              class: 'relative z-10 block self-center font-semibold hover:text-gray-600 dark:hover:text-gray-500 transition-colors hover:bg-slate-800 text-slate-900 hover:text-white px-4 py-2 duration-500 hover:duration-500 dark:border-slate-200 dark:hover:bg-slate-400 dark:text-white dark:hover:text-slate-900 capitalize' %>
+            <%= active_link_to category.name.capitalize, category_products_path(category), class: 'nav-link' %>
           <% end %>
           <!-- Elemento de la lista con dropdown -->
-          <% Category.where(main: false).each do |category| %>
           <li>
-              <%= link_to 'Más Servicios', 
+              <%= active_link_to 'Más Servicios', 
                           '#', 
                           data: {
                             action: "navbar#toggleCatSubmenu",
                           },
-                          class: 'relative z-10 block self-center font-semibold hover:text-gray-600 dark:hover:text-gray-500 transition-colors hover:bg-slate-800 text-slate-900 hover:text-white px-4 py-2 duration-500 hover:duration-500 dark:border-slate-200 dark:hover:bg-slate-400 dark:text-white dark:hover:text-slate-900 capitalize'  %>
-            <ul data-navbar-target="categorySubmenu" class="fixed right-1 top-32 lg:top-20 xl:top-14 z-50 p-6 hidden mt-2 w-screen grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 bg-white rounded-md shadow-xl dark:bg-gray-800">
-              <li class="col-span-1 flex justify-between items-center gap-8">
-                <%= link_to category.name.capitalize, 
-                            category_products_path(category), 
-                            class: 'w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-500 hover:bg-slate-50 cursor-pointer' %>
-              </li>
-              <!-- más elementos del submenú -->
+                          class: 'nav-link'  %>
+            <ul data-navbar-target="categorySubmenu" class="fixed right-1 top-32 lg:top-20 xl:top-14 z-50 p-6 hidden mt-2 w-screen grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 bg-white rounded-md shadow-xl dark:bg-gray-800 mx-auto">
+              <% Category.where(main: false).each do |category| %>
+                <li class="col-span-1 flex justify-between items-center gap-8">
+                  <%= active_link_to category.name.capitalize, category_products_path(category), class: 'nav-link' %>
+                </li>
+                <!-- más elementos del submenú -->
+              <% end %>
             </ul>
           </li>
-          <% end %>
           <!-- más elementos de la lista -->
           <li>
-            <%= link_to 'Contacto', '', class: 'w-fit max-w-auto font-semibold hover:text-gray-600 dark:hover:text-gray-500 transition-colors hover:bg-slate-800 text-slate-900 hover:text-white px-4 py-2 duration-500 hover:duration-500 dark:border-slate-200 dark:hover:bg-slate-400 dark:text-white dark:hover:text-slate-900' %>
+            <%= active_link_to 'Galerias', categories_path, class: 'nav-link' %>
+          </li>
+          <li>
+            <%= active_link_to 'Contacto', products_path, class: 'nav-link' %>
           </li>
         </ul>
       </div>
