@@ -1,5 +1,5 @@
-<div class="p-4">
-  <div class="rounded overflow-hidden shadow-lg">
+
+  <div class="w-full rounded overflow-hidden shadow-lg">
     <div id="product-carousel" class="relative w-full" data-controller="carousel">
       <!-- Carousel wrapper -->
       <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
@@ -9,15 +9,16 @@
             <div class="<%= 'hidden' unless index == 0 %> duration-700 ease-in-out" data-carousel-target="item">
               <picture>
                 <source media="(min-width: 1280px)" 
-                        srcset="<%= rails_representation_url(image.variant(resize: "1024x768")) %>">
+                        srcset="<%= rails_representation_url(image.variant(:desktop)) %>">
                 <source media="(min-width: 1024px)" 
-                        srcset="<%= rails_representation_url(image.variant(resize: "768x576")) %>">
+                        srcset="<%= rails_representation_url(image.variant(:tablet)) %>">
                 <source media="(min-width: 640px)" 
-                        srcset="<%= rails_representation_url(image.variant(resize: "640x480")) %>">
+                        srcset="<%= rails_representation_url(image.variant(:mobile)) %>">
                 <!-- The default image that will be used if none of the above sources are valid -->
-                <img src="<%= rails_representation_url(image.variant(resize: "1536x1152")) %>" 
-                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" 
-                    alt="...">
+                <%= image_tag image.variant(:widescreen), 
+                    loading: "lazy", 
+                    class: "absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2", 
+                    alt: "..." %>
               </picture>
             </div>
           <% end %>
@@ -56,7 +57,7 @@
       </div>
     </div>
   </div>
-</div>
+
 
 <% if action_name != "show" && 1 == 0 %>
   <%= link_to "Show this product", product, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
