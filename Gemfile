@@ -80,3 +80,4 @@ gem "figaro"
 gem 'view_component'
 gem 'devise'
 gem 'friendly_id'
+gem 'inline_svg'
