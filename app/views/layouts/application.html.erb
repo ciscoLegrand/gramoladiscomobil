@@ -13,8 +13,12 @@
 
   <body>
     <%= render 'layouts/shared/navbar' %>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+    
+    <% flash.each do |type, data| %>
+      <%= render(NotificationComponent.new(type: type, data: {title: data.dig('title'), body: data.dig('body')})) %>
+    <% end %>
+    
+
     <main class="w-full min-h-screen mx-auto flex-grow flex flex-col">
       <%= yield %>
     </main>
