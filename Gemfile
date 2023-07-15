@@ -82,3 +82,5 @@ gem 'view_component'
 gem 'devise'
 gem 'friendly_id'
 gem 'inline_svg'
+
+gem "dockerfile-rails", ">= 1.5", :group => :development
