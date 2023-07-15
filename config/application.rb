@@ -38,6 +38,8 @@ module Gramoladiscomobil
       gen.orm               :active_record, primary_key_type: :uuid
       gen.system_tests      false
     end
+
+    config.active_storage.variant_processor = :vips
     # to use component previews in tests
     config.view_component.preview_paths << Rails.root.join('/spec/components/previews')
   end

@@ -5,6 +5,7 @@ class CreateCategories < ActiveRecord::Migration[7.0]
       t.uuid :parent_id
       t.integer :level, null: false, default: 0
       t.string :icon
+      t.boolean :main, null: false, default: false
 
       t.timestamps
     end

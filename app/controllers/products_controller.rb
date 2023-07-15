@@ -1,9 +1,10 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: %i[ show edit update destroy ]
-
+  before_action :set_category, only: %i[ index new create ]
   # GET /products or /products.json
   def index
-    @products = Product.all
+    @products = @category.products if @category.present?
+    @products = Product.all unless @category.present?
   end
 
   # GET /products/1 or /products/1.json
@@ -25,7 +26,7 @@ class ProductsController < ApplicationController
 
     respond_to do |format|
       if @product.save
-        format.html { redirect_to product_url(@product), notice: "Product was successfully created." }
+        format.html { redirect_to product_url(@product),  success: { title: @product.name, body: "Product successfully created" } }
         format.json { render :show, status: :created, location: @product }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +39,7 @@ class ProductsController < ApplicationController
   def update
     respond_to do |format|
       if @product.update(product_params)
-        format.html { redirect_to product_url(@product), notice: "Product was successfully updated." }
+        format.html { redirect_to product_url(@product), success: { title: @product.name, body: "Product successfully updated" } }
         format.json { render :show, status: :ok, location: @product }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -61,6 +62,11 @@ class ProductsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_product
       @product = Product.friendly.find(params[:id])
+    end
+
+    def set_category
+      return unless params[:category_id].present?
+      @category = Category.friendly.find(params[:category_id])
     end
 
     # Only allow a list of trusted parameters through.
