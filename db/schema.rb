@@ -60,6 +60,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_14_164602) do
     t.uuid "parent_id"
     t.integer "level", default: 0, null: false
     t.string "icon"
+    t.boolean "main", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "slug"
