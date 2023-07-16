@@ -57,7 +57,8 @@
         <!-- Menu Toggle Button -->
         <% if user_signed_in? %>
           <div class="flex items-center gap-4">
-            <p>Bienvenido, <%= current_user.email %></p>
+            <p><%= current_user.email %></p>
+            <%= link_to "Panel", admin_root_path, class: "w-auto inline-block text-sm px-4 py-2 leading-none border rounded text-green-500 border-green-500 hover:text-teal-500 hover:bg-white mt-4 lg:mt-0" %>            
             <%= button_to "Log Out", destroy_user_session_path, method: :delete, class: "w-auto inline-block text-sm px-4 py-2 leading-none border rounded text-red-500   border-red-500 hover:text-teal-500 hover:bg-white mt-4 lg:mt-0" %>
           </div>
         <% else %>
