@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_15_144952) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_16_125739) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "pgcrypto"
@@ -90,12 +90,23 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_15_144952) do
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
   end
 
+  create_table "prices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "priciable_type", null: false
+    t.uuid "priciable_id", null: false
+    t.decimal "vat"
+    t.decimal "amount"
+    t.virtual "amount_in_cents", type: :integer, as: "(amount * (100)::numeric)", stored: true
+    t.virtual "amount_w_vat", type: :integer, as: "((amount + ((amount * vat) / (100)::numeric)) * (100)::numeric)", stored: true
+    t.virtual "amount_no_vat", type: :integer, as: "((amount - ((amount * vat) / (100)::numeric)) * (100)::numeric)", stored: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["priciable_type", "priciable_id"], name: "index_prices_on_priciable"
+  end
+
   create_table "products", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "category_id", null: false
     t.string "name", null: false
     t.float "pvp", default: 0.0, null: false
-    t.virtual "price", type: :integer, as: "(pvp * (100)::double precision)", stored: true
-    t.virtual "price_no_tax", type: :integer, as: "(pvp - ((pvp * tax) / (100)::double precision))", stored: true
     t.integer "stock", default: 0, null: false
     t.jsonb "meta_tags"
     t.float "tax", default: 21.0, null: false
