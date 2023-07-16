@@ -1,0 +1,15 @@
+class CreateAlbums < ActiveRecord::Migration[7.0]
+  def change
+    create_table :albums, id: :uuid do |t|
+      t.string :title, null: false
+      t.string :password, null: false
+      t.string :code
+      t.integer :counter, null: false, default: 0
+      t.jsonb :emails, null: false
+      t.date :published_at
+      t.string :status, null: false, default: "draft"
+
+      t.timestamps
+    end
+  end
+end
