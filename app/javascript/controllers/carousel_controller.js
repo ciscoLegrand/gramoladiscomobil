@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["item"];
+  static targets = ["item", "indicator"];
 
   slideTo(event) {
     const index = event.target.dataset.slideTo;
@@ -9,6 +9,7 @@ export default class extends Controller {
     this.hideAll();
     this.itemTargets[index].classList.remove("hidden");
     console.log(`📸 Showing slide at index: ${index}`);
+    this.updateIndicators(index);
   }
 
   prev() {
@@ -49,4 +50,19 @@ export default class extends Controller {
     console.log(`👀 Current visible slide index: ${index}`);
     return index;
   }
+
+  updateIndicators(currentIndex) {
+    this.indicatorTargets.forEach((indicator, index) => {
+      const activeIndicator = indicator.querySelector('.active-indicator');
+      const inactiveIndicator = indicator.querySelector('.inactive-indicator');
+      if (index == currentIndex) {
+        activeIndicator.style.display = '';
+        inactiveIndicator.style.display = 'none';
+      } else {
+        activeIndicator.style.display = 'none';
+        inactiveIndicator.style.display = '';
+      }
+    });
+  }
+
 }

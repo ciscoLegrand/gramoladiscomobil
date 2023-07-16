@@ -1,10 +1,10 @@
-<%= form_with(model: [:admin, product], html: { data: {controller: 'image-preview'}, class: "contents"}) do |form| %>
-  <% if product.errors.any? %>
+<%= form_with(model: [:admin, album], class: "contents") do |form| %>
+  <% if album.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-      <h2><%= pluralize(product.errors.count, "error") %> prohibited this product from being saved:</h2>
+      <h2><%= pluralize(album.errors.count, "error") %> prohibited this album from being saved:</h2>
 
       <ul>
-        <% product.errors.each do |error| %>
+        <% album.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
       </ul>
@@ -12,35 +12,38 @@
   <% end %>
 
   <div class="my-5">
-    <%= form.label :category_id %>
-    <%= form.select :category_id, Category.all.map {|c| [c.name, c.id]}, {include_blank: 'Please select a category'}, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
-
+    <%= form.label :title %>
+    <%= form.text_field :title, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
   <div class="my-5">
-    <%= form.label :name %>
-    <%= form.text_field :name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.label :password %>
+    <%= form.text_field :password, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
   <div class="my-5">
-    <%= form.label :pvp %>
-    <%= form.number_field :pvp, placeholder: 'EJ: 675.00', step: 0.01, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-
-
-  <div class="my-5">
-    <%= form.label :stock %>
-    <%= form.number_field :stock, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.label :code %>
+    <%= form.text_field :code, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
   <div class="my-5">
-    <%= form.label :meta_tags %>
-    <%= form.text_field :meta_tags, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.label :counter %>
+    <%= form.number_field :counter, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
   <div class="my-5">
-    <%= form.label :description %>
-    <%= form.rich_text_area :description, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.label :emails %>
+    <%= form.text_field :emails, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :published_at %>
+    <%= form.date_field :published_at, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :status %>
+    <%= form.text_field :status, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
   <div class="w-full flex justify-center items-center bg-slate-50">
     <label class="flex flex-col justify-center items-center tracking-wide uppercase cursor-pointer">
@@ -61,7 +64,6 @@
       <%= form.file_field :images, multiple: :true, include_hidden: false , class: 'hidden', data: { 'image-preview-target': 'input', action: 'change->image-preview#previewImage' } %>
     </label>
   </div>
-
   <div class="inline">
     <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
   </div>
