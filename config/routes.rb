@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :contacts, only: %i[index show create delete]
+  match '/contact', to: 'contacts#new', via: %i[get], as: :public_contact
+
   resources :products
   resources :categories do
     resources :products, only: %i[index show]
