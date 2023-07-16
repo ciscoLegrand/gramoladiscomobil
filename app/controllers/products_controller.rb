@@ -22,7 +22,9 @@ class ProductsController < ApplicationController
 
   # POST /products or /products.json
   def create
-    @product = Product.new(product_params)
+    price = Price.new(amount: product_params[:pvp], vat: product_params[:tax].presence || 21.00)
+    @product = Product.new(product_params.except(:pvp))
+    @product.prices << price
 
     respond_to do |format|
       if @product.save
@@ -39,6 +41,9 @@ class ProductsController < ApplicationController
   def update
     respond_to do |format|
       if @product.update(product_params)
+        @product.prices
+                .first
+                .update(amount: product_params[:pvp], vat: product_params[:tax].presence || 21.00)
         format.html { redirect_to product_url(@product), success: { title: @product.name, body: "Product successfully updated" } }
         format.json { render :show, status: :ok, location: @product }
       else
@@ -71,6 +76,9 @@ class ProductsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def product_params
-      params.require(:product).permit(:category_id, :name, :pvp, :price, :price_no_vat, :stock, :meta_tags, :tax, :description, images: [])
+      params.require(:product)
+            .permit(:category_id, :name, :pvp, :stock, 
+                    :meta_tags, :tax, :description, images: [])
+            .compact_blank!
     end
 end
