@@ -22,7 +22,7 @@
   <div class="my-5">
     <strong class="block font-medium mb-1">Main:</strong>
     
-    <%= form_with(model: category, method: :patch, local: true) do |form| %>
+    <%= form_with(model: [:admin, category], method: :patch, local: true) do |form| %>
       <label class="relative inline-flex items-center cursor-pointer">
         <%= form.check_box :main, 
             class: "sr-only peer", 
@@ -35,9 +35,9 @@
   </div>
   <% if action_name != "show" %>
     <div class="flex gap-4">
-    <%= link_to "Show this category", category, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to 'Edit this category', edit_category_path(category), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= button_to 'Destroy this category', category_path(category), method: :delete, data: {'turbo-confirm': 'are you sure? '}, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
+    <%= link_to "Show this category", admin_category_path(category), class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to 'Edit this category', edit_admin_category_path(category), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= button_to 'Destroy this category', admin_category_path(category), method: :delete, data: {'turbo-confirm': 'are you sure? '}, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
     </div>
     <hr class="mt-6">
   <% end %>
