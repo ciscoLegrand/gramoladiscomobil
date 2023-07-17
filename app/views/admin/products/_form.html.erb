@@ -45,20 +45,23 @@
   <div class="w-full flex justify-center items-center bg-slate-50">
     <label class="flex flex-col justify-center items-center tracking-wide uppercase cursor-pointer">
       <% if form.object.images.attached? %>
-        <!-- for edir form when image is attached to a product -->
-        <div class="flex justify-between items-center">
-          <% form.object.images do |image|%>
-            <%= image_tag(image, class: 'w-64 h-64 object-cover', data: { 'image-preview-target': 'preview' }) %>
+        <!-- for edit form when image is attached to a product -->
+        <div class="flex flex-wrap justify-between items-center" data-image-preview-target="preview">
+          <% form.object.images.each do |image|%>
+            <%= image_tag(image, data: { 'image-preview-target': 'image'}, class: 'w-64 h-64 object-cover') %>
             <%= inline_svg_tag('icons/form/image.svg', data: { 'image-preview-target': 'svg'}, class:'w-64 h-64 text-slate-300 hidden') %>
           <% end %>
         </div>
       <% else %>
         <!-- for new form when image is not attached to a product -->
-        <%= image_tag('icons/form/image.svg', class: 'w-64 h-64 object-cover hidden', data: { 'image-preview-target': 'preview' }) %>
-        <%= inline_svg_tag('icons/form/image.svg', data: { 'image-preview-target': 'svg'}, class:'w-64 h-64 text-slate-300') %>
+        <div data-image-preview-target="preview">
+          <%= image_tag('icons/form/image.svg', data: { 'image-preview-target': 'image'}, class: 'w-64 h-64 object-cover hidden') %>
+          <%= inline_svg_tag('icons/form/image.svg', data: { 'image-preview-target': 'svg'}, class:'w-64 h-64 text-slate-300 hidden') %>
+        </div>
       <% end %>
       <span class="mt-2 text-lg text-slate-500 "><%= t('.add_image') %></span>
-      <%= form.file_field :images, multiple: :true, include_hidden: false , class: 'hidden', data: { 'image-preview-target': 'input', action: 'change->image-preview#previewImage' } %>
+      <span class="mt-2 text-lg text-slate-500 hidden" data-image-preview-target="message"></span>
+      <%= form.file_field :images, multiple: true, include_hidden: false, class: 'hidden', data: { 'image-preview-target': 'input', action: 'change->image-preview#previewImage' } %>
     </label>
   </div>
 
