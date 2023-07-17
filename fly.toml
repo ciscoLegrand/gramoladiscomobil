@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for gramoladicomobil on 2023-07-15T14:50:50+02:00
+# fly.toml app configuration file generated for gramoladiscomobil on 2023-07-17T10:04:48+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "gramoladicomobil"
+app = "gramoladiscomobil"
 primary_region = "mad"
 console_command = "/rails/bin/rails console"
 

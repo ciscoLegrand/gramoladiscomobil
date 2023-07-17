@@ -10,14 +10,13 @@ LABEL fly_launch_runtime="rails"
 WORKDIR /rails
 
 # Set production environment
-ENV RAILS_ENV="production" \
-    BUNDLE_WITHOUT="development:test" \
+ENV RAILS_ENV="development" \
+    BUNDLE_WITHOUT="test" \
     BUNDLE_DEPLOYMENT="1"
 
 # Update gems and bundler
 RUN gem update --system --no-document && \
     gem install -N bundler
-
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
@@ -36,7 +35,6 @@ COPY --link . .
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 RUN SECRET_KEY_BASE=DUMMY ./bin/rails assets:precompile
-
 
 # Final stage for app image
 FROM base
@@ -64,4 +62,6 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD ["./bin/rails", "server"]
+
+# Override CMD based on RAILS_ENV
+CMD if [ "$RAILS_ENV" = "development" ]; then ./bin/rails server -b 0.0.0.0; else ./bin/rails server; fi

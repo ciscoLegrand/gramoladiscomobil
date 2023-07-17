@@ -58,7 +58,6 @@ group :development, :test do
   gem 'shoulda-matchers', '~> 4.5'
   gem 'factory_bot_rails', '~> 6.1'
   gem 'faker'
-  gem 'letter_opener', '~> 1.7'
 end
 
 group :development do
@@ -82,5 +81,5 @@ gem 'view_component'
 gem 'devise'
 gem 'friendly_id'
 gem 'inline_svg'
-
+gem 'letter_opener', '~> 1.7'
 gem "dockerfile-rails", ">= 1.5", :group => :development
