@@ -29,7 +29,7 @@ class Admin::ProductsController < ApplicationController
 
     respond_to do |format|
       if @product.save
-        format.html { redirect_to product_url(@product),  success: { title: @product.name, body: "Product successfully created" } }
+        format.html { redirect_to admin_product_url(@product),  success: { title: @product.name, body: "Product successfully created" } }
         format.json { render :show, status: :created, location: @product }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -45,7 +45,7 @@ class Admin::ProductsController < ApplicationController
         @product.prices
                 .first
                 .update(amount: product_params[:pvp], vat: product_params[:tax].presence || 21.00)
-        format.html { redirect_to product_url(@product), success: { title: @product.name, body: "Product successfully updated" } }
+        format.html { redirect_to admin_product_url(@product), success: { title: @product.name, body: "Product successfully updated" } }
         format.json { render :show, status: :ok, location: @product }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -59,7 +59,7 @@ class Admin::ProductsController < ApplicationController
     @product.destroy
 
     respond_to do |format|
-      format.html { redirect_to products_url, notice: "Product was successfully destroyed." }
+      format.html { redirect_to admin_products_url, notice: "Product was successfully destroyed." }
       format.json { head :no_content }
     end
   end

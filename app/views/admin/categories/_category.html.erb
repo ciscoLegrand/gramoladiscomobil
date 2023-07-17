@@ -22,7 +22,7 @@
   <div class="my-5">
     <strong class="block font-medium mb-1">Main:</strong>
     
-    <%= form_with(model: category, method: :patch, local: true) do |form| %>
+    <%= form_with(model: [:admin, category], method: :patch, local: true) do |form| %>
       <label class="relative inline-flex items-center cursor-pointer">
         <%= form.check_box :main, 
             class: "sr-only peer", 
