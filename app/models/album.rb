@@ -12,6 +12,8 @@ class Album < ApplicationRecord
   enum status: { draft: 'draft', published: 'published' }
   after_commit :update_image_counter, on: [:create, :update]
 
+  validates :title, presence: true, length: { minimum: 3, maximum: 255 }, uniqueness: true
+
   def images_uploaded_after(**dates)
     start_date = dates[:start_date]&.beginning_of_day || Time.now.beginning_of_day
     end_date = dates[:end_date]&.end_of_day || Time.now.end_of_day

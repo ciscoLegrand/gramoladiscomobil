@@ -32,7 +32,7 @@ class Admin::AlbumsController < ApplicationController
           format.html { redirect_to admin_album_url(album), success: { title: "Success", body: "Album was successfully created." } }
           format.json { render :show, status: :created, location: album }
         else
-          format.html { redirect_to admin_new_album_url, alert: 'no se ha creado ' }
+          format.html { redirect_to new_admin_album_url, alert: { title: 'no se ha creado ', body: album.errors.full_messages } }
           format.json { render json: album.errors, status: :unprocessable_entity }
         end
       end
@@ -54,10 +54,11 @@ class Admin::AlbumsController < ApplicationController
 
   # DELETE /admin/albums/1 or /admin/albums/1.json
   def destroy
+    name = @album.title
     @album.destroy
 
     respond_to do |format|
-      format.html { redirect_to admin_albums_url, notice: "Album was successfully destroyed." }
+      format.html { redirect_to admin_albums_url, success: {title: name, body: 'Successfully delete'} }
       format.json { head :no_content }
     end
   end

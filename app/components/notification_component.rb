@@ -5,16 +5,17 @@ class NotificationComponent < ViewComponent::Base
 
   def initialize(type:, data:)
     @data = prepare_data(data)
-    @data[:timeout] ||= 5000
+    @data[:timeout] ||= 50000
     @type = type
   end
 
   def prepare_data(data)
+    # binding.break
     case data
     when Hash
       data
     else
-      { title: data }
+      { body: data }
     end
   end
 
