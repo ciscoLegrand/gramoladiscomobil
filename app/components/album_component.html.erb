@@ -1,0 +1,27 @@
+<div class="w-full md:w-6/12 lg:w-4/12 xl:w-3/12 dark:text-white">
+  <div class="cursor-pointer">
+      <div class="aspect-w-4 aspect-h-3">
+        <%= image_tag url_for(album.images.first), 
+                      data: { src: "#{rails_blob_url(album.images.first)}"}, 
+                      class: "object-cover"%>
+      </div>
+      <div class="p-4">
+        <div class="flex items-center">
+          <div class="flex-grow">
+            <p class="text-lg md:text-xl dark:text-white mt-3"><%= "#{album.title}" %></p>
+            <p class="text-lg md:text-sm dark:text-white"><time datetime="<%#= album.date_event.strftime("%d-%m-%Y") if album.date_event.present? %>"><%#= album.date_event.strftime("%d-%m-%Y") if album.date_event.present?%></time></p>
+            <%= form_tag admin_album_path(album), method: :get do %>
+              <div class="flex justify-center mt-2">
+                <div class="mr-1">
+                  <%= text_field_tag :password, params[:password], class: 'p-2 border rounded' %>
+                </div>
+                <div>
+                  <%= submit_tag :ver, :name => nil, class: 'px-4 py-2 rounded bg-blue-500 text-white' %>
+                </div>
+              </div>
+            <% end %>  
+          </div>
+        </div>
+      </div>
+  </div>
+</div>

@@ -25,16 +25,12 @@ class Admin::AlbumsController < ApplicationController
     album = Album.new(album_params)
 
     respond_to do |format|
-      if album_params[:images].blank?
-        format.html { redirect_to new_admin_album_url, alert: 'no se crea album sin imagenes' }
+      if album.save 
+        format.html { redirect_to edit_admin_album_url(album), success: { title: "Success", body: "Album was successfully created." } }
+        format.json { render :show, status: :created, location: album }
       else
-        if album.save 
-          format.html { redirect_to admin_album_url(album), success: { title: "Success", body: "Album was successfully created." } }
-          format.json { render :show, status: :created, location: album }
-        else
-          format.html { redirect_to new_admin_album_url, alert: { title: 'no se ha creado ', body: album.errors.full_messages } }
-          format.json { render json: album.errors, status: :unprocessable_entity }
-        end
+        format.html { redirect_to new_admin_album_url, alert: { title: 'no se ha creado ', body: album.errors.full_messages } }
+        format.json { render json: album.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -71,6 +67,6 @@ class Admin::AlbumsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def album_params
-      params.require(:album).permit(:title, :password, :code, :counter, :emails, :published_at, :status, images: [])
+      params.require(:album).permit(:title, :password, :code, :counter, :emails, :date_event, :published_at, :status, images: [])
     end
 end
