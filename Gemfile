@@ -83,3 +83,4 @@ gem 'friendly_id'
 gem 'inline_svg'
 gem 'letter_opener', '~> 1.7'
 gem "dockerfile-rails", ">= 1.5", :group => :development
+gem 'aws-sdk-s3', require: false
