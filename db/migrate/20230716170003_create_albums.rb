@@ -6,6 +6,7 @@ class CreateAlbums < ActiveRecord::Migration[7.0]
       t.string :code
       t.integer :counter, null: false, default: 0
       t.jsonb :emails, null: false
+      t.date :date_event, null: false
       t.date :published_at
       t.string :status, null: false, default: "draft"
 

@@ -1,19 +1,22 @@
 Rails.application.routes.draw do
   namespace :admin do
     root 'dashboard#index'
+    delete 'images/:album_id/delete-all', to: 'images#delete_all', as: :delete_all
     resources :albums
+    resources :images, only: %i[create]
     resources :categories
     resources :contacts
     resources :products
   end
 
-  resources :contacts, only: %i[index show create delete]
+  resources :contacts, only: %i[create]
   match '/contact', to: 'contacts#new', via: %i[get], as: :public_contact
 
   resources :categories do
     resources :products, only: %i[index show]
   end
   root 'pages#index'
+  get 'galleries', to: 'pages#galleries', as: :galleries
   devise_scope :user do
     get ':role/profile', to: 'devise/registrations#edit', as: :profile
   end

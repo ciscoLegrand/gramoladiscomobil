@@ -61,6 +61,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_16_170004) do
     t.string "code"
     t.integer "counter", default: 0, null: false
     t.jsonb "emails", null: false
+    t.date "date_event", null: false
     t.date "published_at"
     t.string "status", default: "draft", null: false
     t.datetime "created_at", null: false
