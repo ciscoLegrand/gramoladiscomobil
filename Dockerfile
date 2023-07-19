@@ -1,67 +1,121 @@
-# syntax = docker/dockerfile:1
+# syntax = docker/dockerfile:experimental
 
-# Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
+# Dockerfile used to build a deployable image for a Rails application.
+# Adjust as required.
+#
+# Common adjustments you may need to make over time:
+#  * Modify version numbers for Ruby, Bundler, and other products.
+#  * Add library packages needed at build time for your gems, node modules.
+#  * Add deployment packages needed by your application
+#  * Add (often fake) secrets needed to compile your assets
+
+#######################################################################
+
+# Learn more about the chosen Ruby stack, Fullstaq Ruby, here:
+#   https://github.com/evilmartians/fullstaq-ruby-docker.
+#
+# We recommend using the highest patch level for better security and
+# performance.
+
 ARG RUBY_VERSION=3.1.2
-FROM ruby:$RUBY_VERSION-slim as base
+ARG VARIANT=jemalloc-slim
+FROM quay.io/evl.ms/fullstaq-ruby:${RUBY_VERSION}-${VARIANT} as base
 
 LABEL fly_launch_runtime="rails"
 
-# Rails app lives here
-WORKDIR /rails
+ARG BUNDLER_VERSION=2.3.3
 
-# Set production environment
-ENV RAILS_ENV="development" \
-    BUNDLE_WITHOUT="test" \
-    BUNDLE_DEPLOYMENT="1"
+ARG RAILS_ENV=staging
+ENV RAILS_ENV=${RAILS_ENV}
 
-# Update gems and bundler
+ENV RAILS_SERVE_STATIC_FILES true
+ENV RAILS_LOG_TO_STDOUT true
+
+ARG BUNDLE_WITHOUT=test
+ARG BUNDLE_PATH=vendor/bundle
+ENV BUNDLE_PATH ${BUNDLE_PATH}
+ENV BUNDLE_WITHOUT ${BUNDLE_WITHOUT}
+
+RUN mkdir /app
+WORKDIR /app
+RUN mkdir -p tmp/pids
+
+#######################################################################
+
+# install packages only needed at build time
+
+FROM base as build_deps
+
+ARG BUILD_PACKAGES="git build-essential libpq-dev wget vim curl gzip xz-utils libsqlite3-dev"
+ENV BUILD_PACKAGES ${BUILD_PACKAGES}
+
+RUN --mount=type=cache,id=dev-apt-cache,sharing=locked,target=/var/cache/apt \
+    --mount=type=cache,id=dev-apt-lib,sharing=locked,target=/var/lib/apt \
+    apt-get update -qq && \
+    apt-get install --no-install-recommends -y ${BUILD_PACKAGES} \
+    && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+#######################################################################
+
+# install gems
+
+FROM build_deps as gems
+
 RUN gem update --system --no-document && \
-    gem install -N bundler
+    gem install -N bundler -v ${BUNDLER_VERSION}
 
-# Throw-away build stage to reduce size of final image
-FROM base as build
+COPY Gemfile* ./
+RUN bundle install &&  rm -rf vendor/bundle/ruby/*/cache
 
-# Install packages needed to build gems
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential libpq-dev libvips
+#######################################################################
 
-# Install application gems
-COPY --link Gemfile Gemfile.lock ./
-RUN bundle install && \
-    rm -rf ~/.bundle/ $BUNDLE_PATH/ruby/*/cache $BUNDLE_PATH/ruby/*/bundler/gems/*/.git
+# install deployment packages
 
-# Copy application code
-COPY --link . .
-
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE=DUMMY ./bin/rails assets:precompile
-
-# Final stage for app image
 FROM base
 
-# Install packages needed for deployment
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl imagemagick libvips postgresql-client && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+ARG DEPLOY_PACKAGES="file vim curl gzip libsqlite3-0 libvips"
+ENV DEPLOY_PACKAGES=${DEPLOY_PACKAGES}
 
-# Copy built artifacts: gems, application
-COPY --from=build /usr/local/bundle /usr/local/bundle
-COPY --from=build /rails /rails
+RUN --mount=type=cache,id=prod-apt-cache,sharing=locked,target=/var/cache/apt \
+    --mount=type=cache,id=prod-apt-lib,sharing=locked,target=/var/lib/apt \
+    apt-get update -qq && \
+    apt-get install --no-install-recommends -y \
+    ${DEPLOY_PACKAGES} wget lsb-release \
+    && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Run and own only the runtime files as a non-root user for security
-RUN useradd rails --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp
-USER rails:rails
+# Update PostgreSQL client to match server version
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" | tee  /etc/apt/sources.list.d/pgdg.list
+RUN apt-get update && apt-get -y -q install postgresql-client-15
 
-# Deployment options
-ENV RAILS_LOG_TO_STDOUT="1" \
-    RAILS_SERVE_STATIC_FILES="true"
+# copy installed gems
+COPY --from=gems /app /app
+COPY --from=gems /usr/lib/fullstaq-ruby/versions /usr/lib/fullstaq-ruby/versions
+COPY --from=gems /usr/local/bundle /usr/local/bundle
 
-# Entrypoint sets up the container.
-ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+#######################################################################
 
-# Start the server by default, this can be overwritten at runtime
-EXPOSE 3000
+# Deploy your application
+COPY . .
 
-# Override CMD based on RAILS_ENV
-CMD if [ "$RAILS_ENV" = "development" ]; then ./bin/rails server -b 0.0.0.0; else ./bin/rails server; fi
+# Adjust binstubs to run on Linux and set current working directory
+RUN chmod +x /app/bin/* && \
+    sed -i 's/ruby.exe/ruby/' /app/bin/* && \
+    sed -i '/^#!/aDir.chdir File.expand_path("..", __dir__)' /app/bin/*
+
+# The following enable assets to precompile on the build server.  Adjust
+# as necessary.  If no combination works for you, see:
+# https://fly.io/docs/rails/getting-started/existing/#access-to-environment-variables-at-build-time
+ENV SECRET_KEY_BASE 1
+# ENV AWS_ACCESS_KEY_ID=1
+# ENV AWS_SECRET_ACCESS_KEY=1
+
+# Run build task defined in lib/tasks/fly.rake
+ARG BUILD_COMMAND="bin/rails fly:build"
+RUN ${BUILD_COMMAND}
+
+# Default server start instructions.  Generally Overridden by fly.toml.
+ENV PORT 8080
+ARG SERVER_COMMAND="bin/rails fly:server"
+ENV SERVER_COMMAND ${SERVER_COMMAND}
+CMD ${SERVER_COMMAND}

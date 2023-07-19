@@ -2,6 +2,8 @@ class Album < ApplicationRecord
   include FriendlyId
   friendly_id :title, use: :slugged
 
+  # has_many_attached :images
+
   has_many_attached :images do |attachable|
     attachable.variant :mobile, resize_to_limit: [480, 800]
     attachable.variant :tablet, resize_to_limit: [800, 1280]
@@ -13,6 +15,7 @@ class Album < ApplicationRecord
   after_commit :update_image_counter, on: [:create, :update]
 
   validates :title, presence: true, length: { minimum: 3, maximum: 255 }, uniqueness: true
+  validate :validate_image_size
 
   def images_uploaded_after(**dates)
     start_date = dates[:start_date]&.beginning_of_day || Time.now.beginning_of_day
@@ -24,5 +27,16 @@ class Album < ApplicationRecord
 
   def update_image_counter
     UpdateImageCounterJob.perform_later(self.id)
+  end
+
+  def validate_image_size
+    if images.attached?
+      images.each do |image|
+        if image.blob.byte_size > 15.megabyte
+          image.purge
+          errors.add(:images, 'size too large. Images should be less than 15MB each')
+        end
+      end
+    end
   end
 end
