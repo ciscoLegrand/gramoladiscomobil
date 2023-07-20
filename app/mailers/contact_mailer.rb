@@ -1,5 +1,5 @@
 class ContactMailer < ApplicationMailer
-  default from: 'no-reply@tudominio.com'
+  default from: 'no-reply@ciscolegrand.dev'
 
   def client_email(contact)
     @contact = contact
@@ -10,7 +10,7 @@ class ContactMailer < ApplicationMailer
 
   def admin_email(contact)
     @contact = contact
-    mail(to: 'tucorreo@tudominio.com', subject: 'Nueva petición de contacto') do |format|
+    mail(to: 'cisco.glez@gmail.com', subject: 'Nueva petición de contacto') do |format|
       format.html { render 'mailers/contact/admin_email' }
     end
   end

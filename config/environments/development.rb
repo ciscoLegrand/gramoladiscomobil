@@ -73,6 +73,10 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.delivery_method = :letter_opener
-
+  # config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.delivery_method = :mailjet
+  config.action_mailer.mailjet_settings = {
+    api_key: Figaro.env.mailjet_api_key,
+    secret_key: Figaro.env.mailjet_secret_key
+  }
 end

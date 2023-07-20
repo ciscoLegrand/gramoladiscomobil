@@ -25,4 +25,10 @@ class ContactsController < ApplicationController
     def set_contact
       @contact = Contact.find(params[:id])
     end
+    # Only allow a list of trusted parameters through.
+    def contact_params
+      params.require(:contact)
+            .permit(:name, :phone, :email, :title, :body,
+                    data: [:location, :date_event, :main_service, :extra_services])
+    end
 end
