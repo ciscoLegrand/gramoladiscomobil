@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
   namespace :admin do
     root 'dashboard#index'
-    delete 'images/:album_id/delete-all', to: 'images#delete_all', as: :delete_all
-    resources :images, only: %i[create]
+    resources :albums
     resources :categories
     resources :contacts
+    resources :images, only: %i[create]
+    delete 'images/:album_id/delete-all', to: 'images#delete_all', as: :delete_all
     resources :products
   end
 
