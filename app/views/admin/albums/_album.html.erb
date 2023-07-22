@@ -1,87 +1,27 @@
-<div id="<%= dom_id album %>">
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Title:</strong>
-    <%= album.title %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Password:</strong>
-    <%= album.password %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Code:</strong>
-    <%= album.code %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Counter:</strong>
-    <%= album.counter %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Emails:</strong>
-    <%= album.emails %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Published at:</strong>
-    <%= album.published_at %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Status:</strong>
-    <%= album.status %>
-  </p>
-
-  <% if action_name != "show" %>
-    <%= link_to "Show this album", admin_album_path(album), class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to 'Edit this album', edit_admin_album_path(album), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
-    <hr class="mt-6">
-  <% end %>
-
-    <div id="product-carousel" class="relative w-full" data-controller="carousel">
-      <!-- Carousel wrapper -->
-      <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
-        <% if album.images.attached? %>
-          <% album.images.each_with_index do |image, index| %>
-            <!-- Item -->
-            <div class="<%= 'hidden' unless index == 0 %> duration-700 ease-in-out" data-carousel-target="item">
-              <picture>
-                <source media="(min-width: 1280px)" 
-                        srcset="<%= rails_representation_url(image.variant(:desktop)) %>">
-                <source media="(min-width: 1024px)" 
-                        srcset="<%= rails_representation_url(image.variant(:tablet)) %>">
-                <source media="(min-width: 640px)" 
-                        srcset="<%= rails_representation_url(image.variant(:mobile)) %>">
-                <!-- The default image that will be used if none of the above sources are valid -->
-                <%= image_tag image.variant(:widescreen), 
-                    loading: "lazy", 
-                    class: "absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2", 
-                    alt: "..." %>
-              </picture>
-            </div>
-          <% end %>
+  <li id="<%= dom_id album %>" 
+      data-target="search_results"
+      class="odd:bg-slate-200 even:bg-white dark:odd:bg-gray-800 dark:even:bg-slate-900 transition-colors duration-500 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">
+    <section class="grid grid-cols-6 gap-4 text-sm p-2">
+      <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">
+        <%= link_to album.title, admin_album_path(album) %>
+      </div>
+      <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">
+        <%= album&.images.size.presence || 0 %>
+      </div>
+      <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">
+        <%= album.status %>
+      </div>
+      <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">
+        <%= album.published_at.strftime('%d-%m-%y') %>
+      </div>
+      <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">
+        <%= album.date_event.strftime('%d-%m-%y') %>
+      </div>
+      <div class="flex-1 flex justify-end items-center text-lg py-4 px-2 gap-4">
+        <% if action_name != "show" %>
+          <%= link_to "Show", admin_album_path(album), class: "rounded-lg py-2 px-4 bg-blue-500 text-white inline-block font-medium transition-colors duration-500 hover:bg-blue-600" %>
+          <%= link_to 'Edit', edit_admin_album_path(album), class: "rounded-lg py-2 ml-2 px-4 bg-blue-500 text-white inline-block font-medium transition-colors duration-500 hover:bg-blue-600" %>
         <% end %>
       </div>
-      <!-- Slider indicators -->
-      <div class="flex gap-4 absolute z-30 flex space-x-3 -translate-x-1/2 bottom-5 left-1/2 hidden">
-        <% album.images.each_with_index do |image, index| %>
-        <button type="button" class="w-3 h-3 rounded-full text-red-50" aria-current="<%= index == 0 %>" aria-label="Slide <%= index + 1 %>" data-action="click->carousel#slideTo" data-carousel-target="indicator" data-slide-to="<%= index %>">
-          <span class="active-indicator" <%= 'style="display: none;"' unless index == 0 %>>🔴</span>
-          <span class="inactive-indicator" <%= 'style="display: none;"' if index == 0 %>>🟢</span>
-        </button> 
-        <% end %>
-      </div>
-
-      <!-- Slider controls -->
-      <% if album.images.size > 1 %>
-        <button type="button" class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-action="click->carousel#prev">
-          <%= inline_svg_tag 'icons/carousel/arrow-left-circle.svg', class: 'h-8 w-8 text-blue-500' %>
-        </button>
-        <button type="button" class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-action="click->carousel#next">
-          <%= inline_svg_tag 'icons/carousel/arrow-right-circle.svg', class: 'h-8 w-8 text-blue-500' %>
-        </button>
-      <% end %>
-    </div>
-</div>
+    </section>
+  </li>
