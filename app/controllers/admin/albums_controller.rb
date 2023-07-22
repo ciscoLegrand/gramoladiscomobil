@@ -54,14 +54,15 @@ class Admin::AlbumsController < ApplicationController
   def destroy
     name = @album.title
     images = @album.images.size
-    @album.images.purge
-    @album.destroy
-    
+  
+    PurgeImagesJob.perform_later(@album)
+  
     respond_to do |format|
-      format.html { redirect_to admin_albums_url, success: {title: name, body: "Successfully delete album and #{images}"} }
+      format.html { redirect_to admin_albums_url, success: {title: "album #{name} se va a borrar.", body: "Recibirás un email con la informacón de eliminación."} }
       format.json { head :no_content }
     end
   end
+  
 
   private
     # Use callbacks to share common setup or constraints between actions.
