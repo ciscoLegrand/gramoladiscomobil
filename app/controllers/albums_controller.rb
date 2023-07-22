@@ -13,8 +13,12 @@ class AlbumsController < ApplicationController
   # GET /admin/albums/1 or /admin/albums/1.json
   def show
     @images = @album.images
-    @pagy, @images = pagy_countless(@images, items: 12)
-    render "albums/images/scrollable_list" if params[:page]
+
+    @pagy, @images = pagy_countless(@images, items: 4)
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   private
