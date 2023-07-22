@@ -5,6 +5,8 @@ class Admin::AlbumsController < ApplicationController
   # GET /admin/albums or /admin/albums.json
   def index
     @albums = Album.all
+    @total_records = @albums.count
+    @pagy, @albums = pagy(@albums, items: 5)
   end
 
   # GET /admin/albums/1 or /admin/albums/1.json
@@ -51,10 +53,12 @@ class Admin::AlbumsController < ApplicationController
   # DELETE /admin/albums/1 or /admin/albums/1.json
   def destroy
     name = @album.title
+    images = @album.images.size
+    @album.images.purge
     @album.destroy
-
+    
     respond_to do |format|
-      format.html { redirect_to admin_albums_url, success: {title: name, body: 'Successfully delete'} }
+      format.html { redirect_to admin_albums_url, success: {title: name, body: "Successfully delete album and #{images}"} }
       format.json { head :no_content }
     end
   end

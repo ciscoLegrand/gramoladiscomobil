@@ -1,14 +1,27 @@
 <div class="w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-  <% end %>
-
   <div class="flex justify-between items-center">
     <h1 class="font-bold text-4xl">Albums</h1>
+
     <%= link_to 'New album', new_admin_album_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
+    <%= link_to 'Back', :back, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
   </div>
 
-  <div id="albums" class="min-w-full">
-    <%= render @albums %>
-  </div>
+  <%== pagy_nav(@pagy) %>
+  <section class="min-w-full w-full flex flex-col justify-center items-center gap-4 my-8 ">
+    <header class="min-w-full font-black dark:text-white">
+      <section class="grid grid-cols-6 gap-4 text-sm p-2">
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">TITLE</div>
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">PHOTOS</div>
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">STATUS</div>
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">PUBLISHED</div>
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">DATE EVENT</div>
+        <div class="flex-1 flex justify-end items-center  text-lg py-4 px-2">ACTIONS</div>
+      </section>
+    </header>
+    <ul id="search_results" class="min-w-full flex flex-col turbo_stream">
+      <% @albums.each do |album|%>
+        <%= render 'admin/albums/album', album: album %>
+      <% end %>
+    </ul>
+  </section>
 </div>
