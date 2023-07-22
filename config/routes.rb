@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   namespace :admin do
     root 'dashboard#index'
-    resources :albums
+    resources :albums do
+      patch :publish, on: :member
+    end
     resources :categories
     resources :contacts
     resources :images, only: %i[create]
