@@ -16,7 +16,7 @@ Pagy::DEFAULT[:items] = 25# frozen_string_literal: true
 # Pagy::VARS[:page]   = 1                                  # default
 # Pagy::VARS[:items]  = 25                                 # default
 # Pagy::VARS[:outset] = 0                                  # default
-Pagy::DEFAULT[:items] = 20
+# Pagy::DEFAULT[:items] = 12
 
 # Other Variables
 # See https://ddnexus.github.io/pagy/api/pagy#other-variables
@@ -37,7 +37,7 @@ Pagy::DEFAULT[:items] = 20
 
 # Array extra: Paginate arrays efficiently, avoiding expensive array-wrapping and without overriding
 # See https://ddnexus.github.io/pagy/extras/array
-require 'pagy/extras/array'
+# require 'pagy/extras/array'
 
 # Countless extra: Paginate without any count, saving one query per rendering
 # See https://ddnexus.github.io/pagy/extras/countless

@@ -2,8 +2,6 @@ class Album < ApplicationRecord
   include FriendlyId
   friendly_id :title, use: :slugged
 
-  # has_many_attached :images
-
   has_many_attached :images do |attachable|
     attachable.variant :mobile, resize_to_limit: [480, 800]
     attachable.variant :tablet, resize_to_limit: [800, 1280]
@@ -21,6 +19,10 @@ class Album < ApplicationRecord
     start_date = dates[:start_date]&.beginning_of_day || Time.now.beginning_of_day
     end_date = dates[:end_date]&.end_of_day || Time.now.end_of_day
     images.blobs.joins(:attachments).where('active_storage_attachments.created_at BETWEEN ? AND ?', start_date, end_date).count
+  end
+
+  def update_status!
+    published! if published_at.present? && published_at <= Time.now
   end
 
   private
