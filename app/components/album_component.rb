@@ -9,6 +9,7 @@ class AlbumComponent < ViewComponent::Base
   end
 
   def render?
-    @album.present?
+    Rails.logger.debug "AlbumComponent#render? #{album.inspect}"
+    @album.present? && @album.published? && @album.images.attached?
   end
 end

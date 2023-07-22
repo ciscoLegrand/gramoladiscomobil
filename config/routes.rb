@@ -2,7 +2,6 @@ Rails.application.routes.draw do
   namespace :admin do
     root 'dashboard#index'
     delete 'images/:album_id/delete-all', to: 'images#delete_all', as: :delete_all
-    resources :albums
     resources :images, only: %i[create]
     resources :categories
     resources :contacts
@@ -15,8 +14,14 @@ Rails.application.routes.draw do
   resources :categories do
     resources :products, only: %i[index show]
   end
+
   root 'pages#index'
-  get 'galleries', to: 'pages#galleries', as: :galleries
+  resources :albums do
+    collection do
+      post :index
+    end
+  end
+
   devise_scope :user do
     get ':role/profile', to: 'devise/registrations#edit', as: :profile
   end
