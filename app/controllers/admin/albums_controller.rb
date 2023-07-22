@@ -1,10 +1,15 @@
 class Admin::AlbumsController < ApplicationController
   layout "admin"
-  before_action :set_album, only: %i[ show edit update destroy ]
+  before_action :set_album, only: %i[ show edit update destroy publish]
 
   # GET /admin/albums or /admin/albums.json
   def index
-    @albums = Album.all
+    @years = Album.all.pluck(:date_event).map(&:year).uniq.sort.reverse
+    @albums = Album.all.order(date_event: :desc)
+    @albums = Album.draft if params[:draft].present?
+    @albums = Album.published if params[:published].present?
+    @albums = Album.by_year(params[:year]) if params[:year].present?
+      
     @total_records = @albums.count
     @pagy, @albums = pagy(@albums, items: 5)
   end
@@ -62,7 +67,16 @@ class Admin::AlbumsController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
+
+  def publish
+    @album = Album.friendly.find(params[:id])
+    @album.update(status: :published, published_at: Time.now)
+
+    respond_to do |format|
+      format.html { redirect_to admin_album_url(@album), success: { title: "Success", body: "Album was successfully published." } }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace(@album, partial: "admin/albums/album", locals: { album: @album }) }
+    end
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

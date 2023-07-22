@@ -25,6 +25,10 @@ class Album < ApplicationRecord
     published! if published_at.present? && published_at <= Time.now
   end
 
+  scope :published, -> { where(status: :published) }
+  scope :draft, -> { where(status: :draft) }
+  scope :by_year, ->(year) { where('extract(year from published_at) = ?', year) }
+
   private
 
   def update_image_counter
