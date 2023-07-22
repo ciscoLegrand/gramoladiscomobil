@@ -3,15 +3,11 @@ class ContactMailer < ApplicationMailer
 
   def client_email(contact)
     @contact = contact
-    mail(to: @contact.email, subject: 'Gracias por tu petición') do |format|
-      format.html { render 'mailers/contact/client_email' }
-    end
+    mail(to: @contact.email, subject: 'Gracias por tu petición')
   end
 
   def admin_email(contact)
     @contact = contact
-    mail(to: 'cisco.glez@gmail.com', subject: 'Nueva petición de contacto') do |format|
-      format.html { render 'mailers/contact/admin_email' }
-    end
+    mail(to: 'cisco.glez@gmail.com', subject: 'Nueva petición de contacto')
   end
 end
