@@ -10,14 +10,14 @@ class NotificationComponent < ViewComponent::Base
   end
 
   def prepare_data(data)
-    # binding.break
     case data
     when Hash
-      data
+      data.with_indifferent_access
     else
-      { body: data }
+      { body: data }.with_indifferent_access
     end
   end
+  
 
   def icon
     case type

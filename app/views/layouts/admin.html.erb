@@ -15,14 +15,11 @@
 
  <body>
     <main class="w-full flex justify-between" data-controller="toogle">
-      <% flash.each do |type, data| %>
-        <%= render(NotificationComponent.new(type: type, data: data)) %>
-      <% end %>
+      <%= render 'layouts/shared/notification' %>
       <%= render 'layouts/shared/aside_nav' if user_signed_in? %>
       <div class="w-full flex flex-col">
         <%= yield %>
       </div>
     </main>
-    <%= render 'layouts/shared/footer' %>
   </body>
 </html>

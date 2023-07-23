@@ -13,15 +13,12 @@
 
   <body>
     <%= render 'layouts/shared/navbar' %>
-    
-    <% flash.each do |type, data| %>
-      <%= render(NotificationComponent.new(type: type, data: data)) %>
-    <% end %>
-    
+    <%= render 'layouts/shared/notification' %>
 
     <main class="w-full min-h-screen mx-auto flex-grow flex flex-col">
       <%= yield %>
     </main>
+
     <%= render 'layouts/shared/footer' %>
   </body>
 </html>
