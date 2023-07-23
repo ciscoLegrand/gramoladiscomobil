@@ -4,7 +4,22 @@
 
   </div>
 
-  <div id="contacts" class="min-w-full">
-    <%= render @contacts %>
-  </div>
+  <section class="min-w-full w-full flex flex-col justify-center items-center gap-4 my-8 ">
+    <header class="min-w-full font-black dark:text-white">
+      <section class="grid grid-cols-7 gap-4 text-sm p-2">
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">NAME</div>
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">EMAIL</div>
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">TITLE</div>
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">LOCATION</div>
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">DATE EVENT</div>
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">RECIBIDO</div>
+        <div class="flex-1 flex justify-end items-center  text-lg py-4 px-2">ACTIONS</div>
+      </section>
+    </header>
+    <ul id="search_results" class="min-w-full flex flex-col turbo_stream">
+      <% @contacts.each do |contact|%>
+        <%= render 'admin/contacts/contact', contact: contact %>
+      <% end %>
+    </ul>
+  </section>
 </div>

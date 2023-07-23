@@ -4,11 +4,15 @@ class Admin::ContactsController < ApplicationController
 
   # GET /contacts or /contacts.json
   def index
-    @contacts = Contact.all
+    @contacts = Contact.by_date
+    @contacts = @contacts.read if params[:read]
+    @contacts = @contacts.unread if params[:unread]
   end
 
   # GET /contacts/1 or /contacts/1.json
   def show
+    @contact.data.merge!(opened: params[:opened])
+    @contact.save!
   end
 
   # DELETE /contacts/1 or /contacts/1.json
