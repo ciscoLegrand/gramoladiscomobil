@@ -26,7 +26,11 @@ class Admin::CategoriesController < ApplicationController
 
     respond_to do |format|
       if @category.save
-        format.html { redirect_to admin_category_url(@category), success: { title: @category.name, body: "Category successfully created" } }
+        format.html { redirect_to admin_categories_path, success: { title: @category.name, body: "Category successfully created" } }
+        format.turbo_stream do
+          flash.now[:success] = { title: "Success", body: "Category was successfully created." }
+          render 'admin/categories/turbo_streams/create'
+        end
         format.json { render :show, status: :created, location: @category }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -39,7 +43,11 @@ class Admin::CategoriesController < ApplicationController
   def update
     respond_to do |format|
       if @category.update(category_params)
-        format.html { redirect_to admin_category_url(@category), success: { title: @category.name, body: "Category successfully updated" } }
+        format.html { redirect_to admin_categories_path, success: { title: @category.name, body: "Category successfully updated" } }
+        format.turbo_stream do
+          flash.now[:success] = { title: "Success", body: "Category was successfully updated." }
+          render 'admin/categories/turbo_streams/update'
+        end
         format.json { render :show, status: :ok, location: admin_category_path(@category) }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -55,6 +63,10 @@ class Admin::CategoriesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to admin_categories_url, alert: { title: 'Success', body: "Category #{name} deleted"} }
+      format.turbo_stream do
+        flash.now[:success] = { title: "Success", body: "Category #{name} deleted"}
+        render 'admin/categories/turbo_streams/destroy'
+      end
       format.json { head :no_content }
     end
   end

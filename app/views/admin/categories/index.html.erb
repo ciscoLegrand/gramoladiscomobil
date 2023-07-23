@@ -4,7 +4,21 @@
     <%= link_to 'New category', new_admin_category_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
   </div>
 
-  <div id="categories" class="min-w-full">
-    <%= render @categories %>
-  </div>
+  <section class="min-w-full w-full flex flex-col justify-center items-center gap-4 my-8 ">
+    <header class="min-w-full font-black dark:text-white">
+      <section class="grid grid-cols-6 gap-4 text-sm p-2">
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">ICON</div>
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">NAME</div>
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">PARENT</div>
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">LEVEL</div>
+        <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">PRINCIPAL</div>
+        <div class="flex-1 flex justify-end items-center  text-lg py-4 px-2">ACTIONS</div>
+      </section>
+    </header>
+    <ul id="search_results" class="min-w-full flex flex-col turbo_stream">
+      <% @categories.each do |category|%>
+        <%= render 'admin/categories/category', category: category %>
+      <% end %>
+    </ul>
+  </section>
 </div>
