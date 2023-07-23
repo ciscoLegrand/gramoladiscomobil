@@ -4,11 +4,11 @@ class Admin::AlbumsController < ApplicationController
 
   # GET /admin/albums or /admin/albums.json
   def index
-    @years = Album.all.pluck(:date_event).map(&:year).uniq.sort.reverse
     @albums = Album.all.order(date_event: :desc)
-    @albums = Album.draft if params[:draft].present?
-    @albums = Album.published if params[:published].present?
-    @albums = Album.by_year(params[:year]) if params[:year].present?
+    @years  = @albums.pluck(:date_event).map(&:year).uniq.sort.reverse
+    @albums = Album.draft                   if params[:draft].present?
+    @albums = Album.published               if params[:published].present?
+    @albums = Album.by_year(params[:year])  if params[:year].present?
       
     @total_records = @albums.count
     @pagy, @albums = pagy(@albums, items: 5)
@@ -35,16 +35,15 @@ class Admin::AlbumsController < ApplicationController
 
   # POST /admin/albums or /admin/albums.json
   def create
-    album = Album.new(album_params)
+    @album = Album.new(album_params)
 
     respond_to do |format|
-      if album.save 
-        format.html { redirect_to edit_admin_album_url(album), success: { title: "Success", body: "Album was successfully created." } }
-        format.turbo_stream { render turbo_stream: turbo_stream.prepend("albums", partial: "admin/albums/album", locals: { album: album }) }
-        format.json { render :show, status: :created, location: album }
+      if @album.save
+        format.html { redirect_to edit_admin_album_url(@album), success: { title: "Success", body: "Album was successfully created." } }
+        format.json { render :show, status: :created, location: @album }
       else
-        format.html { redirect_to new_admin_album_url, alert: { title: 'no se ha creado ', body: album.errors.full_messages } }
-        format.json { render json: album.errors, status: :unprocessable_entity }
+        format.html { redirect_to new_admin_album_url, alert: { title: 'Album no creado', body: @album.errors.full_messages } }
+        format.json { render json: @album.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -53,8 +52,11 @@ class Admin::AlbumsController < ApplicationController
   def update
     respond_to do |format|
       if @album.update(album_params)
-        format.html { redirect_to admin_album_url(@album), success: { title: "Success", body: "Album was successfully updated." } }
-        format.turbo_stream { render turbo_stream: turbo_stream.replace(@album, partial: "admin/albums/album", locals: { album: @album }) }
+        format.html { redirect_to admin_albums_path, success: { title: "Success", body: "Album was successfully updated." } }
+        format.turbo_stream do
+          flash.now[:success] = { title: "Success", body: "Album was successfully updated." }
+          render 'admin/albums/turbo_streams/update'
+        end
         format.json { render :show, status: :ok, location: @album }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -70,19 +72,32 @@ class Admin::AlbumsController < ApplicationController
   
     respond_to do |format|
       format.html { redirect_to admin_albums_url, success: {title: "album #{name} se va a borrar.", body: "Recibirás un email con la informacón de eliminación."} }
-      format.turbo_stream { render turbo_stream: turbo_stream.remove(@album) }
+      format.turbo_stream do
+        flash.now[:success] = { title: "album #{name} se va a borrar.", body: "Recibirás un email con la informacón de eliminación."}
+        render 'admin/albums/turbo_streams/destroy'
+      end
       format.json { head :no_content }
     end
   end
 
   def publish
-    @album = Album.friendly.find(params[:id])
-    @album.update(status: :published, published_at: Time.now)
-
     respond_to do |format|
-      format.html { redirect_to admin_album_url(@album), success: { title: "Success", body: "Album was successfully published." } }
-      format.turbo_stream { render turbo_stream: turbo_stream.replace(@album, partial: "admin/albums/album", locals: { album: @album }) }
-      format.json { render :show, status: :ok, location: @album }
+      if @album.images.attached?
+        @album.update(status: :published, published_at: Time.now)
+        format.html { redirect_to admin_album_url(@album), success: { title: "Success", body: "Album was successfully published." } }
+        format.turbo_stream do
+          flash.now[:success] = { title: "album #{@album.title}", body: "Publicado correctamente."}
+          render 'admin/albums/turbo_streams/publish'
+        end
+        format.json { render :show, status: :ok, location: @album }
+      else
+        format.html { redirect_to admin_albums_path, alert: { title: "Error", body: "No se puede publicar un album sin imagenes" } }
+        format.turbo_stream do
+          flash.now[:alert] = { title: "Error", body: "No se puede publicar un album sin imagenes" } 
+          render 'admin/albums/turbo_streams/publish'
+        end
+        format.json { render :show, status: :unprocessable_entity, location: @album }
+      end
     end
   end
 
