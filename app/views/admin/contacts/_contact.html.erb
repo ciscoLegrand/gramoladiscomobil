@@ -1,36 +1,38 @@
-<div id="<%= dom_id contact %>">
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Name:</strong>
-    <%= contact.name %>
-  </p>
+  <li id="<%= dom_id contact %>" 
+      data-target="search_results"
+      class="odd:bg-slate-200 even:bg-white dark:odd:bg-gray-800 dark:even:bg-slate-900 transition-colors duration-500 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">
+    <section class="grid grid-cols-7 gap-4 text-sm p-2">
+      <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">
+        <%= contact.name %>
+      </div>
+      <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">
+        <%= contact.email%>
+      </div>
+      <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">
+        <%= link_to contact.title, admin_contact_path(contact) %>
+      </div>
+      <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">
+        <%= contact.data.dig('location') %> | <%= contact.data.dig('opened')%>
+      </div>
+      <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">
+        <%= contact.data.dig('date_event').to_date.strftime('%d-%m-%y') if contact.data.dig('date_event').present? %>
+      </div>
+      <div class="flex-1 flex justify-start items-center  text-lg py-4 px-2">
+        <%= contact.created_at.strftime('%d-%m-%y [%H:%M:%S]') %>
+      </div>
+      <div class="flex-1 flex justify-end items-center text-lg py-4 px-2 gap-4">
+        <%
+          icon = 'mail-exclamation' unless contact.data.dig('opened') == true
+          icon = 'mail-opened'      if contact.data.dig('opened') == true
+        %>
+        <%= link_to admin_contact_path(contact), class: "rounded-lg py-2 px-4 bg-blue-500 text-white inline-block font-medium transition-colors duration-500 hover:bg-blue-600" do %>
+          <%= inline_svg_tag("icons/contact/#{icon}.svg", class: 'h-6 w-6') %>
+        <% end %>
+        <%= button_to admin_contact_path(contact), form: { data: { turbo_confirm: 'Are you sure?' } }, method: :delete, class: "rounded-lg py-2 ml-2 px-4 bg-red-500 text-white inline-block font-medium transition-colors duration-500 hover:bg-red-600" do %>
+          <%= inline_svg_tag('icons/shared/trash.svg')%>
+        <% end %>
+      </div>
+    </section>
+  </li>
 
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Phone:</strong>
-    <%= contact.phone %>
-  </p>
 
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Email:</strong>
-    <%= contact.email %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Title:</strong>
-    <%= contact.title %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Data:</strong>
-    <%= contact.data %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">body:</strong>
-    <%= contact.body %>
-  </p>
-
-  <% if action_name != "show" %>
-    <%= link_to "Show this contact", admin_contact_path(contact), class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <hr class="mt-6">
-  <% end %>
-</div>
