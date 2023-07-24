@@ -3,6 +3,8 @@ class ContactsController < ApplicationController
   # GET /contacts/new
   def new
     @contact = Contact.new
+    @main = Category.joins(:products).find_by(name: 'CABINAS')
+    @extras = Category.joins(:products).where.not(name: 'CABINAS').distinct
   end
 
   # POST /contacts or /contacts.json
@@ -11,9 +13,9 @@ class ContactsController < ApplicationController
 
     respond_to do |format|
       if @contact.save
-        format.html { redirect_to root_path, success: { title: 'Solicitud enviada', body: "Recibiras una respuesta lo antes posible" } }
+        format.html { redirect_to root_path, success: { title: t('contacts.create.success.title'), body: t('contacts.create.success.body') } }
       else
-        format.html { redirect_to root_path, error: { title: 'Error', body: "No se ha podido enviar tu consulta" } }
+        format.html { redirect_to public_contact_path, error: { title: t('contacts.create.error.title', count: @contact.errors.count), body: t('contacts.create.error.body') } }
         format.json { render json: @contact.errors, status: :unprocessable_entity }
       end
     end
