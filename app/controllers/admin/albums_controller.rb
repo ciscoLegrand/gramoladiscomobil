@@ -39,10 +39,10 @@ class Admin::AlbumsController < ApplicationController
 
     respond_to do |format|
       if @album.save
-        format.html { redirect_to edit_admin_album_url(@album), success: { title: "Success", body: "Album was successfully created." } }
+        format.html { redirect_to edit_admin_album_url(@album), success: { title: t('admin.albums.create.success.title'), body: t('admin.albums.create.success.body') } }
         format.json { render :show, status: :created, location: @album }
       else
-        format.html { redirect_to new_admin_album_url, alert: { title: 'Album no creado', body: @album.errors.full_messages } }
+        format.html { redirect_to new_admin_album_url, alert: { title: t('admin.albums.create.success.title'), body: @album.errors.full_messages } }
         format.json { render json: @album.errors, status: :unprocessable_entity }
       end
     end
@@ -52,9 +52,9 @@ class Admin::AlbumsController < ApplicationController
   def update
     respond_to do |format|
       if @album.update(album_params)
-        format.html { redirect_to admin_albums_path, success: { title: "Success", body: "Album was successfully updated." } }
+        format.html { redirect_to admin_albums_path, success: { title: t('admin.albums.update.success.title'), body: t('admin.albums.update.success.body') } }
         format.turbo_stream do
-          flash.now[:success] = { title: "Success", body: "Album was successfully updated." }
+          flash.now[:success] = { title: t('admin.albums.update.success.title'), body:t('admin.albums.update.success.body') }
           render 'admin/albums/turbo_streams/update'
         end
         format.json { render :show, status: :ok, location: @album }
@@ -71,9 +71,9 @@ class Admin::AlbumsController < ApplicationController
     PurgeImagesJob.perform_later(@album)
   
     respond_to do |format|
-      format.html { redirect_to admin_albums_url, success: {title: "album #{name} se va a borrar.", body: "Recibirás un email con la informacón de eliminación."} }
+      format.html { redirect_to admin_albums_url, success: {title: t('admin.albums.destroy.success.title', name: name), body: t('admin.albums.destroy.success.body') } }
       format.turbo_stream do
-        flash.now[:success] = { title: "album #{name} se va a borrar.", body: "Recibirás un email con la informacón de eliminación."}
+        flash.now[:success] = { title: t('admin.albums.destroy.success.title', name: name), body: t('admin.albums.destroy.success.body') }
         render 'admin/albums/turbo_streams/destroy'
       end
       format.json { head :no_content }
@@ -84,16 +84,16 @@ class Admin::AlbumsController < ApplicationController
     respond_to do |format|
       if @album.images.attached?
         @album.update(status: :published, published_at: Time.now)
-        format.html { redirect_to admin_album_url(@album), success: { title: "Success", body: "Album was successfully published." } }
+        format.html { redirect_to admin_album_url(@album), success: { title: t('admin.albums.publish.success.title'), body: t('admin.albums.publish.success.body') } }
         format.turbo_stream do
-          flash.now[:success] = { title: "album #{@album.title}", body: "Publicado correctamente."}
+          flash.now[:success] = { title: t('admin.albums.publish.success.title'), body: "Publicado correctamente."}
           render 'admin/albums/turbo_streams/publish'
         end
         format.json { render :show, status: :ok, location: @album }
       else
-        format.html { redirect_to admin_albums_path, alert: { title: "Error", body: "No se puede publicar un album sin imagenes" } }
+        format.html { redirect_to admin_albums_path, alert: { title: t('admin.albums.publish.alert.title'), body: t('admin.albums.publish.alert.body') } }
         format.turbo_stream do
-          flash.now[:alert] = { title: "Error", body: "No se puede publicar un album sin imagenes" } 
+          flash.now[:alert] = { title: t('admin.albums.publish.alert.title'), body: t('admin.albums.publish.alert.body') } 
           render 'admin/albums/turbo_streams/publish'
         end
         format.json { render :show, status: :unprocessable_entity, location: @album }

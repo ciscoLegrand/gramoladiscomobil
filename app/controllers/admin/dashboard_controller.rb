@@ -7,7 +7,7 @@ class Admin::DashboardController < ApplicationController
   private
   def ensure_admin
     unless current_user.admin?
-      redirect_to root_path, alert: "No tienes permisos para acceder a esta sección"
+      redirect_to root_path, alert: t('admin.dashboard.ensure_admin.alert')
     end
   end
 end

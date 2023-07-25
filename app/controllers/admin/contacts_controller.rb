@@ -11,16 +11,17 @@ class Admin::ContactsController < ApplicationController
 
   # GET /contacts/1 or /contacts/1.json
   def show
-    @contact.data.merge!(opened: params[:opened])
+    @contact.data.merge!(opened: true)
     @contact.save!
   end
 
   # DELETE /contacts/1 or /contacts/1.json
   def destroy
+    name = @contact.title
     @contact.destroy
 
     respond_to do |format|
-      format.html { redirect_to admin_contacts_url, notice: "Contact was successfully destroyed." }
+      format.html { redirect_to admin_contacts_url, success: { title: t('admin.contacts.destroy.success.title', name: name), body: t('admin.contacts.destroy.success.body') } }
       format.json { head :no_content }
     end
   end

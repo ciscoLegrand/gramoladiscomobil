@@ -1,7 +1,8 @@
 class Contact < ApplicationRecord
+  validates :title, presence: true, length: { minimum: 10, maximum: 180 }
   validates :name, presence: true
-  validates :email, presence: true
-  validates :body, presence: true
+  validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :body, presence: true, length: { minimum: 10, maximum: 1000 }
 
   after_create :send_email
 
