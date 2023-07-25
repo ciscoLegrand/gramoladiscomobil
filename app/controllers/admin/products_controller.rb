@@ -29,7 +29,7 @@ class Admin::ProductsController < ApplicationController
 
     respond_to do |format|
       if @product.save
-        format.html { redirect_to admin_product_url(@product),  success: { title: @product.name, body: "Product successfully created" } }
+        format.html { redirect_to admin_product_url(@product),  success: { title: @product.name, body: t('admin.products.create.success.body') } }
         format.json { render :show, status: :created, location: @product }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -45,7 +45,7 @@ class Admin::ProductsController < ApplicationController
         @product.prices
                 .first
                 .update(amount: product_params[:pvp], vat: product_params[:tax].presence || 21.00)
-        format.html { redirect_to admin_product_url(@product), success: { title: @product.name, body: "Product successfully updated" } }
+        format.html { redirect_to admin_product_url(@product), success: { title: @product.name, body: t('admin.products.udate.success.body') } }
         format.json { render :show, status: :ok, location: @product }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -56,10 +56,11 @@ class Admin::ProductsController < ApplicationController
 
   # DELETE /products/1 or /products/1.json
   def destroy
+    name = @product.name
     @product.destroy
 
     respond_to do |format|
-      format.html { redirect_to admin_products_url, notice: "Product was successfully destroyed." }
+      format.html { redirect_to admin_products_url, alert: { title: t('admin.products.destroy.alert.title', name: name), body: t('admin.products.destroy.alert.body')} }
       format.json { head :no_content }
     end
   end
