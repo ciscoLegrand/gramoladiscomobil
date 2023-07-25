@@ -127,7 +127,7 @@ es:
         success:
           title: "Álbum %{name}"
           body: "Se ha publicado correctamente."
-        error:
+        alert:
           title: "Álbum %{name}"
           body: "No se puede publicar un álbum sin imágenes"
     categories:

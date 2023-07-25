@@ -52,9 +52,9 @@ class Admin::AlbumsController < ApplicationController
   def update
     respond_to do |format|
       if @album.update(album_params)
-        format.html { redirect_to admin_albums_path, success: { title: t('admin.albums.update.success.title'), body: t('admin.albums.update.success.body') } }
+        format.html { redirect_to admin_albums_path, success: { title: t('admin.albums.update.success.title', name: @album.title), body: t('admin.albums.update.success.body') } }
         format.turbo_stream do
-          flash.now[:success] = { title: t('admin.albums.update.success.title'), body:t('admin.albums.update.success.body') }
+          flash.now[:success] = { title: t('admin.albums.update.success.title', name: @album.title), body:t('admin.albums.update.success.body') }
           render 'admin/albums/turbo_streams/update'
         end
         format.json { render :show, status: :ok, location: @album }
@@ -84,16 +84,16 @@ class Admin::AlbumsController < ApplicationController
     respond_to do |format|
       if @album.images.attached?
         @album.update(status: :published, published_at: Time.now)
-        format.html { redirect_to admin_album_url(@album), success: { title: t('admin.albums.publish.success.title'), body: t('admin.albums.publish.success.body') } }
+        format.html { redirect_to admin_album_url(@album), success: { title: t('admin.albums.publish.success.title', name: @album.title), body: t('admin.albums.publish.success.body') } }
         format.turbo_stream do
-          flash.now[:success] = { title: t('admin.albums.publish.success.title'), body: "Publicado correctamente."}
+          flash.now[:success] = { title: t('admin.albums.publish.success.title', name: @album.title), body: t('admin.albums.publish.success.body')}
           render 'admin/albums/turbo_streams/publish'
         end
         format.json { render :show, status: :ok, location: @album }
       else
-        format.html { redirect_to admin_albums_path, alert: { title: t('admin.albums.publish.alert.title'), body: t('admin.albums.publish.alert.body') } }
+        format.html { redirect_to admin_albums_path, alert: { title: t('admin.albums.publish.alert.title', name: @album.title), body: t('admin.albums.publish.alert.body') } }
         format.turbo_stream do
-          flash.now[:alert] = { title: t('admin.albums.publish.alert.title'), body: t('admin.albums.publish.alert.body') } 
+          flash.now[:alert] = { title: t('admin.albums.publish.alert.title', name: @album.title), body: t('admin.albums.publish.alert.body') } 
           render 'admin/albums/turbo_streams/publish'
         end
         format.json { render :show, status: :unprocessable_entity, location: @album }
