@@ -20,6 +20,8 @@ Rails.application.routes.draw do
 
   root 'pages#index'
   resources :albums do
+    get :verify_password, on: :member
+    post :verify_password, on: :member
     collection do
       post :index
     end
