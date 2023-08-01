@@ -1,4 +1,4 @@
-<div id="notification" class="flex flex-col items-end justify-center">
+<div id="notification" class="flex flex-col items-end justify-center z-50">
   <% flash.each do |type, data| %>
     <%= render(NotificationComponent.new(type: type, data: data)) %>
   <% end %>
