@@ -1,2 +1,10 @@
-<div id="images" class="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mx-auto"></div>
-<%= turbo_frame_tag "pagination", src: album_path(@album, format: :turbo_stream), loading: :lazy %>
+
+<% if @album.password.eql?(session[:album_password]) %>
+  <div class="w-full text-center text-4xl">
+    SESSION: <%= session[:album_password] %>
+    Password: <%= @album.password %>
+  </div>
+  <%= render 'albums/images/album', collection: @album.images %>
+<% else %>
+    <%= render 'albums/images/verify_password' %>
+<% end %>
