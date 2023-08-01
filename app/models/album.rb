@@ -9,7 +9,7 @@ class Album < ApplicationRecord
     attachable.variant :widescreen, resize_to_limit: [1920, 1080]
   end
 
-  enum status: { draft: 'draft', published: 'published' }
+  enum status: { draft: 'draft', publish: 'publish' }
   after_commit :update_image_counter, on: [:create, :update]
 
   validates :title, presence: true, length: { minimum: 3, maximum: 255 }, uniqueness: true
@@ -25,7 +25,7 @@ class Album < ApplicationRecord
     published! if published_at.present? && published_at <= Time.now
   end
 
-  scope :published, -> { where(status: :published) }
+  scope :published, -> { where(status: :publish) }
   scope :draft, -> { where(status: :draft) }
   scope :by_year, ->(year) { where('extract(year from published_at) = ?', year) }
 

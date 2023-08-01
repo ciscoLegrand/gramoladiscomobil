@@ -83,7 +83,8 @@ class Admin::AlbumsController < ApplicationController
   def publish
     respond_to do |format|
       if @album.images.attached?
-        @album.update(status: :published, published_at: Time.now)
+        @album.publish!
+        PublishAlbumJob.perform_later(@album)
         format.html { redirect_to admin_album_url(@album), success: { title: t('admin.albums.publish.success.title', name: @album.title), body: t('admin.albums.publish.success.body') } }
         format.turbo_stream do
           flash.now[:success] = { title: t('admin.albums.publish.success.title', name: @album.title), body: t('admin.albums.publish.success.body')}
