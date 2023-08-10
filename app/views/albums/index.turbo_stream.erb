@@ -1,10 +1,12 @@
-<%= turbo_stream.update "next_link" do %>
-  <% if @pagy.next.present? %>
-    <%= button_to "next", pagy_url_for(@pagy, @pagy.next), class: 'border border-blue-600 rounded-lg hover:bg-blue-600 text-blue-600 hover:text-white px-4 py-2' %>
+<div class="container flex flex-col gap-8 mx-auto my-12">
+  <%= turbo_stream.update "next_link" do %>
+    <% if @pagy.next.present? %>
+      <%= button_to "next", pagy_url_for(@pagy, @pagy.next), class: 'border border-blue-600 rounded-lg hover:bg-blue-600 text-blue-600 hover:text-white px-4 py-2' %>
+    <% end %>
   <% end %>
-<% end %>
-<%= turbo_stream.replace "albums" do %>
-  <section id="albums" class="container grid grid-cols-4 mx-auto gap-8">
-    <%= render AlbumComponent.with_collection(@albums)%>
-  </section>
-<% end %>
+  <%= turbo_stream.replace "albums" do %>
+    <section id="albums" class="grid grid-cols-4 mx-auto gap-8">
+      <%= render AlbumComponent.with_collection(@albums)%>
+    </section>
+  <% end %>
+</div>
