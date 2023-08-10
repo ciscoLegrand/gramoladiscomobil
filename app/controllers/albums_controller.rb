@@ -3,7 +3,7 @@ class AlbumsController < ApplicationController
 
   # GET /albums or /albums.json
   def index
-    @pagy, @albums = pagy_countless(Album.where(status: 'published').order(published_at: :desc), items: 12)
+    @pagy, @albums = pagy_countless(Album.published, items: 12)
     respond_to do |format|
       format.html # GET
       format.turbo_stream # POST
