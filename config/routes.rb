@@ -14,7 +14,6 @@ Rails.application.routes.draw do
 
   resources :contacts, only: %i[create]
   match '/contact', to: 'contacts#new', via: %i[get], as: :public_contact
-  get 'download-image/:id', to: 'albums#download_image', as: :download_image
 
   resources :categories do
     resources :products, only: %i[index show]
