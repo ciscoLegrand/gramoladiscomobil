@@ -25,8 +25,8 @@ class Album < ApplicationRecord
     published! if published_at.present? && published_at <= Time.now
   end
 
-  scope :published, -> { where(status: :publish) }
-  scope :draft, -> { where(status: :draft) }
+  scope :published, -> { where(status: :publish).order(published_at: :desc) }
+  scope :draft, -> { where(status: :draft).order(created_at: :desc) }
   scope :by_year, ->(year) { where('extract(year from published_at) = ?', year) }
 
   private
