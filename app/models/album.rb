@@ -8,7 +8,7 @@ class Album < ApplicationRecord
     attachable.variant :desktop, resize_to_limit: [1280, 1024]
     attachable.variant :widescreen, resize_to_limit: [1920, 1080]
   end
-
+  
   enum status: { draft: 'draft', publish: 'publish' }
   after_commit :update_image_counter, on: [:create, :update]
 

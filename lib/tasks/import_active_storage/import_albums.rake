@@ -24,13 +24,30 @@ namespace :import do
 
     @mappings_csv.close
     puts "Exported album_mappings.csv"
+
+    # Attach the CSV to a new Report record
+    report = Report.new
+    report.file.attach(io: File.open(@mappings_csv_path), filename: 'album_mappings.csv', content_type: 'text/csv')
+
+    if report.save
+      puts "Successfully saved the CSV to Digital Ocean Spaces!"
+    else
+      puts "Failed to save the CSV to Digital Ocean Spaces. Errors: #{report.errors.full_messages.join(", ")}"
+    end
   end
 end
 
-
 def create_album(row)
+  if Album.find_by(title: row['title']).present?
+    title = "#{row['title']}-#{row['date_event']}"
+    slug = "#{row['title'].parameterize}-#{row['date_event']}"
+  else
+    title = row['title']
+    slug = row['title'].parameterize
+  end
+
   album = Album.new(
-    title: row['title'],
+    title: title,
     password: row['password'],
     code: row['code'],
     counter: row['counter'].to_i,
@@ -40,7 +57,7 @@ def create_album(row)
     status: row['status'] || 'draft',
     created_at: DateTime.parse(row['created_at']),
     updated_at: DateTime.parse(row['updated_at']),
-    slug: "#{row['title'].parameterize}"
+    slug: slug
   )
 
   if album.save

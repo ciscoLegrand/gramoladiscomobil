@@ -1,0 +1,21 @@
+<!-- app/views/process_mailer/process_completion.html.erb -->
+<h1>Informe de Importación de ActiveStorage desde CSV</h1>
+
+<p>Proceso: <%= @info[:process_name] %></p>
+<p>Finalizó en: <%= @info[:end_time] %></p>
+<p>Entorno: <%= @info[:environment] %></p>
+<p>Versión de Ruby: <%= @info[:ruby_version] %></p>
+<p>Versión de Rails: <%= @info[:rails_version] %></p>
+<p>Usuario: <%= @info[:user] %></p>
+<p>Host: <%= @info[:host_info] %></p>
+
+<h2>Blobs no procesados</h2>
+<% if @info[:skipped_blobs].any? %>
+  <ul>
+    <% @info[:skipped_blobs].each do |blob| %>
+      <li><%= blob["key"] %> (ID: <%= blob["id"] %>)</li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No hay blobs que se hayan omitido.</p>
+<% end %>
