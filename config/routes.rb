@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     root 'dashboard#index'
     resources :albums do
       patch :publish, on: :member
+      post  :search, on: :collection
     end
     resources :categories
     resources :contacts
@@ -13,6 +14,7 @@ Rails.application.routes.draw do
 
   resources :contacts, only: %i[create]
   match '/contact', to: 'contacts#new', via: %i[get], as: :public_contact
+  get 'download-image/:id', to: 'albums#download_image', as: :download_image
 
   resources :categories do
     resources :products, only: %i[index show]
