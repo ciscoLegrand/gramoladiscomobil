@@ -1,0 +1,5 @@
+<%= turbo_stream.update(
+    'search_results',
+    partial: 'layouts/shared/searcher/search_results',
+    locals: { resources: @filtered_albums, attribute: :title }
+    ) %>

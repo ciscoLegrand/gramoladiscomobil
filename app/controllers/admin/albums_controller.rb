@@ -102,6 +102,18 @@ class Admin::AlbumsController < ApplicationController
     end
   end
 
+  # POST /admin/albums/search
+  def search
+    @albums = Album.all
+    text_fragment = params[:title]
+    @filtered_albums = @albums.select { |e| e.title.upcase.include?(text_fragment.upcase) }
+    respond_to do |format|
+      format.turbo_stream do
+        render 'admin/albums/turbo_streams/search_results'
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_album
