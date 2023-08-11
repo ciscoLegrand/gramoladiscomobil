@@ -14,7 +14,7 @@ namespace :import do
     album_mapping_filename = 'album_mappings.csv'
 
     # Distinguishing environment to locate the album mapping file
-    if Rails.env.production?
+    if Rails.env.production? || Rails.env.staging?
       # Assuming you have a Report model to store the CSV file
       report = Report.last
       if report&.file.attached?
@@ -53,8 +53,10 @@ namespace :import do
 
       puts "Reading active_storage_attachments CSV and processing records..."
       CSV.foreach(active_storage_attachments_path, headers: true) do |row|
+        puts "Processing attachment for record type: #{row["record_type"]}"
         unless ['Gallery', 'Album'].include?(row["record_type"])
           skipped_blobs << row.to_h
+          puts "🚫 sikiped blobs counter: #{skipped_blobs.size}"
           next
         end
 
@@ -69,7 +71,10 @@ namespace :import do
         next unless blob_data
 
         # Skip if the blob already exists in the database
-        next if ActiveStorage::Blob.where(key: blob_data.dig(:key)).exists?
+        if ActiveStorage::Blob.where(key: blob_data.dig(:key)).exists?
+          puts "file already exists: #{ActiveStorage::Blob.where(key: blob_data.dig(:key)).exists?}"
+          next
+        end
 
         # Create the blob
         metadata = blob_data[:metadata] == 'NULL' ? '' : JSON.parse(blob_data[:metadata])
@@ -98,8 +103,12 @@ namespace :import do
       
       # Update albums after all the attachments are imported
       mapping.each do |old_id, value|
-        album = Album.find_by(uuid: value[:uuid])
-        album&.publish!
+        album = Album.find_by(id: value[:uuid])
+        # if published_at is a past date, update status to publish
+        if album&.published_at&.past?
+          album&.publish!
+          puts "📅 Album (#{album.title}) published at: #{album.published_at}"
+        end
       end
     rescue => e
       puts "🚨 Error during the import process: #{e.message}"
@@ -108,7 +117,7 @@ namespace :import do
       error_info = {
         process_name: "Importación de ActiveStorage desde CSV",
         error_time: Time.now.strftime('%Y-%m-%d %H:%M:%S'),
-        input_data: row.to_h,
+        skipped_blobs: skipped_blobs,
         environment: Rails.env,
         ruby_version: RUBY_VERSION,
         rails_version: Rails::VERSION::STRING,
