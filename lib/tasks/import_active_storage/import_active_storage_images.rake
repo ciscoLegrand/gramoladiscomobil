@@ -108,11 +108,19 @@ namespace :import do
       mapping.each do |old_id, value|
         album = Album.find_by(id: value[:uuid])
         # if published_at is a past date, update status to publish
-        if album&.published_at&.past?
+        if album&.published_at&.past? && album&.images.attached?
           album.current_host = host
           album.current_user_id = nil
           album&.publish!
           puts "📅 Album (#{album.title}) published at: #{album.published_at}"
+          actions << {album: album.title, message: "published at #{Time.zone.now.strftime('%d-%m-%y [%H:%M:%S]')}"}
+        else
+          puts '📅 Album not published yet or no images attached'
+          reason = "NOT PUBLISHED REASON "
+          reason = 'no images attached' if album&.images.attached?
+          reason += 'not past date of publish' if album&.published_at&.future?
+
+          actions << {album: album.title, message: reason}
         end
       end
     rescue => e
@@ -146,6 +154,7 @@ namespace :import do
         rails_version: Rails::VERSION::STRING,
         user: "System (rake task): import:active_storage_images",
         host_info: host,
+        actions: actions,
         skipped_blobs: skipped_blobs
       }
 
