@@ -73,7 +73,8 @@ namespace :import do
 
         # Skip if the blob already exists in the database
         if ActiveStorage::Blob.where(key: blob_data.dig(:key)).exists?
-          puts "file already exists: #{ActiveStorage::Blob.where(key: blob_data.dig(:key)).exists?}"
+          puts "😵‍💫😵‍💫😵‍💫 file already exists: #{ActiveStorage::Blob.where(key: blob_data.dig(:key)).exists?}"
+          skipped_blobs << { error: "DUPLICATED KEY #{blob_data.dig(:key)}", blob_data: blob_data, attachment_data: row.to_h }
           next
         end
 
@@ -129,7 +130,12 @@ namespace :import do
       }
 
       # Enviar correo electrónico
-      ErrorMailer.import_error(e, e.backtrace, error_info).deliver_later
+      ErrorMailer.import_error(e, e.backtrace, error_info).deliver_now
+      # Enviar correo electrónico
+      mail = ErrorMailer.import_error(nil,nil, general_info).deliver_now
+      puts '📫 ' +  mail.subject
+      puts '📫 ' +  mail.body
+      puts '📫 ' +  mail.to 
     ensure
       # Recopilando información general
       general_info = {
@@ -144,7 +150,10 @@ namespace :import do
       }
 
       # Enviar correo electrónico
-      ErrorMailer.import_error(nil,nil, general_info).deliver_later
+      mail = ErrorMailer.import_error(nil,nil, general_info).deliver_now
+      puts '📫 ' +  mail.subject
+      puts '📫 ' +  mail.body
+      puts '📫 ' +  mail.to 
     end
 
     puts "Import process finished."

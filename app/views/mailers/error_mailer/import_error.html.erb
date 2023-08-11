@@ -12,16 +12,34 @@
 <% if @info[:skipped_blobs].any? %>
   <ul>
     <% @info[:skipped_blobs].each do |blob| %>
-      <li><%= blob["key"] %> (ID: <%= blob["id"] %>)</li>
+      <% if blob[:error] %>
+        <li>
+          Key: <%= blob[:key] %> || Error: <%= blob[:error] %> 
+          <ul>
+            <li>Nombre de archivo: <%= blob[:filename] %></li>
+            <li>Tipo de contenido: <%= blob[:content_type] %></li>
+            <li>Metadata: <%= blob[:metadata].inspect %></li>
+            <li>Nombre del servicio: <%= blob[:service_name] %></li>
+            <li>Tamaño en bytes: <%= blob[:byte_size] %></li>
+            <li>Checksum: <%= blob[:checksum] %></li>
+            <li>Creado en: <%= blob[:created_at] %></li>
+          </ul>
+        </li>
+      <% else %>
+        <li>Key: <%= blob[:key] %> (ID: <%= blob["id"] %>)</li>
+      <% end %>
     <% end %>
   </ul>
-  <p> La tarea ha fallado por la siguiente excepcion/es: </p>
-  <%= @exception %>
-  <p> Puedes seguir el backtrace en los siguientes logs: </p>
-  <%= @backtrace %>
 <% elsif @info[:error_row].present? %>
   <p>Se han encontrado los siguientes errores: </p>
   <%= @info[:error_row]%>
 <% else %>
   <p>No hay blobs que se hayan omitido.</p>
+<% end %>
+
+<% unless @exception.nil? %>
+  <p> La tarea ha fallado por la siguiente excepción/es: </p>
+  <%= @exception %>
+  <p> Puedes seguir el backtrace en los siguientes logs: </p>
+  <%= @backtrace %>
 <% end %>
