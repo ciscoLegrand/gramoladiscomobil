@@ -72,9 +72,10 @@ namespace :import do
         next unless blob_data
 
         # Skip if the blob already exists in the database
-        if ActiveStorage::Blob.where(key: blob_data.dig(:key)).exists?
-          puts "😵‍💫😵‍💫😵‍💫 file already exists: #{ActiveStorage::Blob.where(key: blob_data.dig(:key)).exists?}"
-          skipped_blobs << { error: "DUPLICATED KEY #{blob_data.dig(:key)}", blob_data: blob_data, attachment_data: row.to_h }
+        active_blob = ActiveStorage::Blob.find_by(key: blob_data.dig(:key))
+        if active_blob
+          puts "😵‍💫😵‍💫😵‍💫 file already exists: #{active_blob}"
+          skipped_blobs << { error: "DUPLICATED KEY #{blob_data.dig(:key)}", blob_data: active_blob, attachment_data: row.to_h }
           next
         end
 

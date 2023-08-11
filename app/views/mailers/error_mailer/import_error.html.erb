@@ -1,38 +1,39 @@
 <h1>Informe de Importación de ActiveStorage desde CSV</h1>
 
-<p>Proceso: <%= @info[:process_name] %></p>
-<p>Finalizó en: <%= @info[:end_time] %></p>
-<p>Entorno: <%= @info[:environment] %></p>
-<p>Versión de Ruby: <%= @info[:ruby_version] %></p>
-<p>Versión de Rails: <%= @info[:rails_version] %></p>
-<p>Usuario: <%= @info[:user] %></p>
-<p>Host: <%= @info[:host_info] %></p>
+<p>Proceso: <%= @info.dig(:process_name) %></p>
+<p>Finalizó en: <%= @info.dig(:end_time) %></p>
+<p>Entorno: <%= @info.dig(:environment) %></p>
+<p>Versión de Ruby: <%= @info.dig(:ruby_version) %></p>
+<p>Versión de Rails: <%= @info.dig(:rails_version) %></p>
+<p>Usuario: <%= @info.dig(:user) %></p>
+<p>Host: <%= @info.dig(:host_info) %></p>
 
 <h2>Blobs no procesados</h2>
-<% if @info[:skipped_blobs].any? %>
+<% if @info[:skipped_blobs]&.any? %>
   <ul>
     <% @info[:skipped_blobs].each do |blob| %>
-      <% if blob[:error] %>
-        <li>
-          Key: <%= blob[:key] %> || Error: <%= blob[:error] %> 
+      <li>
+        Key: <%= blob.dig(:blob_data, :key) %> 
+        <% if blob[:error] %>
+          || Error: <%= blob[:error] %> 
           <ul>
-            <li>Nombre de archivo: <%= blob[:filename] %></li>
-            <li>Tipo de contenido: <%= blob[:content_type] %></li>
-            <li>Metadata: <%= blob[:metadata].inspect %></li>
-            <li>Nombre del servicio: <%= blob[:service_name] %></li>
-            <li>Tamaño en bytes: <%= blob[:byte_size] %></li>
-            <li>Checksum: <%= blob[:checksum] %></li>
-            <li>Creado en: <%= blob[:created_at] %></li>
+            <li>Nombre de archivo: <%= blob.dig(:blob_data, :filename) %></li>
+            <li>Tipo de contenido: <%= blob.dig(:blob_data, :content_type) %></li>
+            <li>Metadata: <%= blob.dig(:blob_data, :metadata).inspect %></li>
+            <li>Nombre del servicio: <%= blob.dig(:blob_data, :service_name) %></li>
+            <li>Tamaño en bytes: <%= blob.dig(:blob_data, :byte_size) %></li>
+            <li>Checksum: <%= blob.dig(:blob_data, :checksum) %></li>
+            <li>Creado en: <%= blob.dig(:blob_data, :created_at) %></li>
           </ul>
-        </li>
-      <% else %>
-        <li>Key: <%= blob[:key] %> (ID: <%= blob["id"] %>)</li>
-      <% end %>
+        <% else %>
+          (ID: <%= blob.dig(:blob_data, :id) %>)
+        <% end %>
+      </li>
     <% end %>
   </ul>
-<% elsif @info[:error_row].present? %>
+<% elsif @info.dig(:error_row)&.present? %>
   <p>Se han encontrado los siguientes errores: </p>
-  <%= @info[:error_row]%>
+  <%= @info.dig(:error_row) %>
 <% else %>
   <p>No hay blobs que se hayan omitido.</p>
 <% end %>
