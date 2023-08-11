@@ -1,4 +1,3 @@
-<!-- app/views/process_mailer/process_completion.html.erb -->
 <h1>Informe de Importación de ActiveStorage desde CSV</h1>
 
 <p>Proceso: <%= @info[:process_name] %></p>
@@ -16,6 +15,13 @@
       <li><%= blob["key"] %> (ID: <%= blob["id"] %>)</li>
     <% end %>
   </ul>
+  <p> La tarea ha fallado por la siguiente excepcion/es: </p>
+  <%= @exception %>
+  <p> Puedes seguir el backtrace en los siguientes logs: </p>
+  <%= @backtrace %>
+<% elsif @info[:error_row].present? %>
+  <p>Se han encontrado los siguientes errores: </p>
+  <%= @info[:error_row]%>
 <% else %>
   <p>No hay blobs que se hayan omitido.</p>
 <% end %>

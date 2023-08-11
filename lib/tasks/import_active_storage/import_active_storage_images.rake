@@ -117,13 +117,13 @@ namespace :import do
       # Recopilando información adicional
       error_info = {
         process_name: "Importación de ActiveStorage desde CSV",
-        error_time: Time.now.strftime('%Y-%m-%d %H:%M:%S'),
-        error_row: error_row,
+        end_time: Time.now.strftime('%Y-%m-%d %H:%M:%S'),
         environment: Rails.env,
         ruby_version: RUBY_VERSION,
         rails_version: Rails::VERSION::STRING,
         user: "System (rake task: import:active_storage_images))",
-        host_info: host
+        host_info: host,
+        error_row: error_row
       }
 
       # Enviar correo electrónico
@@ -142,7 +142,7 @@ namespace :import do
       }
 
       # Enviar correo electrónico
-      ProcessMailer.process_completion(general_info).deliver_later
+      ProcessMailer.import_error(nil,nil, general_info).deliver_later
     end
 
     puts "Import process finished."
