@@ -14,7 +14,7 @@ namespace :import do
     album_mapping_filename = 'album_mappings.csv'
 
     # Distinguishing environment to locate the album mapping file
-    if Rails.env.production? || Rails.env.staging?
+    if Rails.env.production?
       # Assuming you have a Report model to store the CSV file
       report = Report.last
       if report&.file.attached?
@@ -107,6 +107,8 @@ namespace :import do
         album = Album.find_by(id: value[:uuid])
         # if published_at is a past date, update status to publish
         if album&.published_at&.past?
+          album.current_host = host
+          album.current_user_id = nil
           album&.publish!
           puts "📅 Album (#{album.title}) published at: #{album.published_at}"
         end
@@ -121,7 +123,7 @@ namespace :import do
         environment: Rails.env,
         ruby_version: RUBY_VERSION,
         rails_version: Rails::VERSION::STRING,
-        user: "System (rake task: import:active_storage_images))",
+        user: "System (rake task): import:active_storage_images",
         host_info: host,
         error_row: error_row
       }
@@ -136,13 +138,13 @@ namespace :import do
         environment: Rails.env,
         ruby_version: RUBY_VERSION,
         rails_version: Rails::VERSION::STRING,
-        user: "System (rake task) import:active_storage_images",
+        user: "System (rake task): import:active_storage_images",
         host_info: host,
         skipped_blobs: skipped_blobs
       }
 
       # Enviar correo electrónico
-      ProcessMailer.import_error(nil,nil, general_info).deliver_later
+      ErrorMailer.import_error(nil,nil, general_info).deliver_later
     end
 
     puts "Import process finished."

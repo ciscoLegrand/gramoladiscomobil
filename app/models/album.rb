@@ -10,10 +10,12 @@ class Album < ApplicationRecord
   end
   
   enum status: { draft: 'draft', publish: 'publish' }
-  after_commit :update_image_counter, on: [:create, :update]
 
   validates :title, presence: true, length: { minimum: 3, maximum: 255 }, uniqueness: true
   validate :validate_image_size
+
+  attr_accessor :current_host, :current_user_id
+  after_commit :update_image_counter, on: [:create, :update]
 
   def images_uploaded_after(**dates)
     start_date = dates[:start_date]&.beginning_of_day || Time.now.beginning_of_day
@@ -32,8 +34,9 @@ class Album < ApplicationRecord
   private
 
   def update_image_counter
-    UpdateImageCounterJob.perform_later(self.id)
+    UpdateImageCounterJob.perform_later(self.id, @current_host, @current_user_id)
   end
+
 
   def validate_image_size
     if images.attached?

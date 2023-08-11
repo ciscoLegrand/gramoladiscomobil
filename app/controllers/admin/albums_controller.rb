@@ -36,7 +36,8 @@ class Admin::AlbumsController < ApplicationController
   # POST /admin/albums or /admin/albums.json
   def create
     @album = Album.new(album_params)
-
+    @album.current_host    = request.host
+    @album.current_user_id = current_user&.id
     respond_to do |format|
       if @album.save
         format.html { redirect_to edit_admin_album_url(@album), success: { title: t('admin.albums.create.success.title'), body: t('admin.albums.create.success.body') } }
@@ -50,6 +51,8 @@ class Admin::AlbumsController < ApplicationController
 
   # PATCH/PUT /admin/albums/1 or /admin/albums/1.json
   def update
+    @album.current_host     = request.host
+    @album.current_user_id  = current_user&.id
     respond_to do |format|
       if @album.update(album_params)
         format.html { redirect_to admin_albums_path, success: { title: t('admin.albums.update.success.title', name: @album.title), body: t('admin.albums.update.success.body') } }
