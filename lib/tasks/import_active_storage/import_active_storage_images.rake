@@ -133,9 +133,8 @@ namespace :import do
       ErrorMailer.import_error(e, e.backtrace, error_info).deliver_now
       # Enviar correo electrónico
       mail = ErrorMailer.import_error(nil,nil, general_info).deliver_now
-      puts '📫 ' +  mail.subject
-      puts '📫 ' +  mail.body
-      puts '📫 ' +  mail.to 
+      puts mail.subject
+      puts mail.to 
     ensure
       # Recopilando información general
       general_info = {
@@ -151,9 +150,8 @@ namespace :import do
 
       # Enviar correo electrónico
       mail = ErrorMailer.import_error(nil,nil, general_info).deliver_now
-      puts '📫 ' +  mail.subject
-      puts '📫 ' +  mail.body
-      puts '📫 ' +  mail.to 
+      puts mail.subject
+      puts mail.to 
     end
 
     puts "Import process finished."
