@@ -27,8 +27,8 @@ class UpdateImageCounterJob < ApplicationJob
         ruby_version: RUBY_VERSION,
         rails_version: Rails::VERSION::STRING,
         user: user_info,
-        host_info: host,  # Asegúrate de definir 'host' anteriormente o reemplázalo con el valor deseado
-        error_row: error_row  # Asegúrate de definir 'error_row' anteriormente o reemplázalo con el valor deseado
+        host_info: host,
+        error_row: { album_title: album.title, error: e.messages }
       }
 
       # Enviar correo electrónico

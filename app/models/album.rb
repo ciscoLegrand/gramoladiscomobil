@@ -12,7 +12,7 @@ class Album < ApplicationRecord
   enum status: { draft: 'draft', publish: 'publish' }
 
   validates :title, presence: true, length: { minimum: 3, maximum: 255 }, uniqueness: true
-  validate :validate_image_size
+  # validate :validate_image_size
 
   attr_accessor :current_host, :current_user_id
   after_commit :update_image_counter, on: [:create, :update]

@@ -4,7 +4,7 @@ namespace :import do
   desc 'Import active_storage_blobs and attachments data from CSV'
   task active_storage_images: :environment do
 
-    host = Thread.current[:host]
+    host = 'https://gramoladiscomobil.fly.dev/'
     error_row = {}
     skipped_blobs = []
     # Define absolute paths for CSVs
