@@ -22,7 +22,6 @@
         <%= link_to 'Back', :back, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium whitespace-nowrap" %>
       </div>
     </div>
-    <div id="search_results" class="w-full flex justify-end"></div>
   </div>
   <section class="min-w-full w-full flex flex-col justify-center items-center gap-4 my-8 ">
     <header class="min-w-full font-black dark:text-white">
@@ -36,9 +35,7 @@
       </section>
     </header>
     <ul id="search_results" class="min-w-full flex flex-col turbo_stream">
-      <% @albums.each do |album|%>
-        <%= render 'admin/albums/album', album: album %>
-      <% end %>
+        <%= render @albums if params[:title].blank? %>
     </ul>
   </section>
 </div>
