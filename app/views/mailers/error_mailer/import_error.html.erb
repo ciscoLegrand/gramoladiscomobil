@@ -13,17 +13,17 @@
   <ul>
     <% @info[:skipped_blobs].each do |blob| %>
       <li>
-        Key: <%= blob.dig(:blob_data, :key) %> 
+        Key: <%= blob[:blob_data].key %> 
         <% if blob[:error] %>
           || Error: <%= blob[:error] %> 
           <ul>
-            <li>Nombre de archivo: <%= blob.dig(:blob_data, :filename) %></li>
-            <li>Tipo de contenido: <%= blob.dig(:blob_data, :content_type) %></li>
-            <li>Metadata: <%= blob.dig(:blob_data, :metadata).inspect %></li>
-            <li>Nombre del servicio: <%= blob.dig(:blob_data, :service_name) %></li>
-            <li>Tamaño en bytes: <%= blob.dig(:blob_data, :byte_size) %></li>
-            <li>Checksum: <%= blob.dig(:blob_data, :checksum) %></li>
-            <li>Creado en: <%= blob.dig(:blob_data, :created_at) %></li>
+            <li>Nombre de archivo: <%= blob[:blob_data].filename%></li>
+            <li>Tipo de contenido: <%= blob[:blob_data].content_type %></li>
+            <li>Metadata: <%= blob[:blob_data].metadata %></li>
+            <li>Nombre del servicio: <%= blob[:blob_data].service_name %></li>
+            <li>Tamaño en bytes: <%= blob[:blob_data].byte_size %></li>
+            <li>Checksum: <%= blob[:blob_data].checksum %></li>
+            <li>Creado en: <%= blob[:blob_data].created_at %></li>
           </ul>
         <% else %>
           (ID: <%= blob.dig(:blob_data, :id) %>)
