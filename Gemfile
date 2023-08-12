@@ -86,3 +86,4 @@ gem "dockerfile-rails", ">= 1.5", :group => :development
 gem 'aws-sdk-s3', require: false
 gem 'mailjet'
 gem 'pagy'
+gem 'tty-progressbar'

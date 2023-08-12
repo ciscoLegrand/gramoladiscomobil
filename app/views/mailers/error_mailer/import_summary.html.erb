@@ -1,0 +1,11 @@
+<h1>Resumen de la Importación</h1>
+<p>Proceso: <%= @info[:process_name] %></p>
+<p>Finalizado en: <%= @info[:end_time] %></p>
+<p>Entorno: <%= @info[:environment] %></p>
+<p>Versión de Ruby: <%= @info[:ruby_version] %></p>
+<p>Versión de Rails: <%= @info[:rails_version] %></p>
+<p>Usuario: <%= @info[:user] %></p>
+<p>Host: <%= @info[:host_info] %></p>
+<p>Total de filas procesadas: <%= @info[:total_rows] %></p>
+<p>Álbumes importados con éxito: <%= @info[:successful_albums] %></p>
+<p>Álbumes con errores: <%= @info[:failed_albums] %></p>

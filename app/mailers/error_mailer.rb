@@ -6,4 +6,9 @@ class ErrorMailer < ApplicationMailer
     subject = @exception.nil? ? 'Finalizada correctamente la' : 'Error en la'
     mail(to: 'cisco.glez@gmail.com', subject: "#{subject} - #{info[:process_name]}")
   end
+
+  def import_summary(info)
+    @info = info
+    mail(to: 'cisco.glez@gmail.com', subject: "Summary of #{info[:process_name]}")
+  end
 end
