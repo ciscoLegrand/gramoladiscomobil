@@ -9,6 +9,6 @@ class ErrorMailer < ApplicationMailer
 
   def import_summary(info)
     @info = info
-    mail(to: 'cisco.glez@gmail.com', subject: "Summary of #{info[:process_name]}")
+    mail(to: 'cisco.glez@gmail.com', subject: "Resumen de #{info[:process_name]}")
   end
 end

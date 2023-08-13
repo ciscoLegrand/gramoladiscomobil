@@ -1,11 +1,144 @@
-<h1>Resumen de la Importación</h1>
-<p>Proceso: <%= @info[:process_name] %></p>
-<p>Finalizado en: <%= @info[:end_time] %></p>
-<p>Entorno: <%= @info[:environment] %></p>
-<p>Versión de Ruby: <%= @info[:ruby_version] %></p>
-<p>Versión de Rails: <%= @info[:rails_version] %></p>
-<p>Usuario: <%= @info[:user] %></p>
-<p>Host: <%= @info[:host_info] %></p>
-<p>Total de filas procesadas: <%= @info[:total_rows] %></p>
-<p>Álbumes importados con éxito: <%= @info[:successful_albums] %></p>
-<p>Álbumes con errores: <%= @info[:failed_albums] %></p>
+<p>Resumen de: <%= @info[:process_name] || '' %></p>
+<table>
+    <tr>
+        <th>Característica</th>
+        <th>Valor</th>
+    </tr>
+    <tr>
+        <td>Inicio del proceso</td>
+        <td><%= @info[:start_time] || '' %></td>
+    </tr>
+    <tr>
+        <td>Fin del proceso</td>
+        <td><%= @info[:end_time] || '' %></td>
+    </tr>
+    <tr>
+        <td>Entorno</td>
+        <td><%= @info[:environment] || '' %></td>
+    </tr>
+    <tr>
+        <td>Versión de Ruby</td>
+        <td><%= @info[:ruby_version] || '' %></td>
+    </tr>
+    <tr>
+        <td>Versión de Rails</td>
+        <td><%= @info[:rails_version] || '' %></td>
+    </tr>
+    <tr>
+        <td>Usuario</td>
+        <td><%= @info[:user] || '' %></td>
+    </tr>
+    <tr>
+        <td>Total de Filas</td>
+        <td><%= @info[:total_rows] || '' %></td>
+    </tr>
+    <tr>
+        <td>Álbumes exitosos</td>
+        <td><%= @info[:successful_albums] || '' %></td>
+    </tr>
+    <tr>
+        <td>Álbumes fallidos</td>
+        <td><%= @info[:failed_albums] || '' %></td>
+    </tr>
+    <tr>
+        <td>Duración total</td>
+        <td><%= @info[:total_duration] || '' %></td>
+    </tr>
+    <tr>
+        <td>Uso de RAM</td>
+        <td><%= @info[:monitor_system][:ram] || '' %></td>
+    </tr>
+    <tr>
+        <td>Uso de CPU</td>
+        <td><%= @info[:monitor_system][:cpu_usage] || '' %></td>
+    </tr>
+    <tr>
+        <td>Carga del sistema</td>
+        <td><%= @info[:monitor_system][:laoad_avg] || '' %></td>
+    </tr>
+</table>
+
+<!-- Si hay errores, los imprimimos en una tabla aparte -->
+<% if @info[:errors]&.any? %>
+<h3>Errores:</h3>
+<table border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th>Título del Álbum</th>
+            <th>Mensaje de Error</th>
+            <th>Blob con Problemas</th>
+            <th>Backtrace</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @info[:errors].each do |error| %>
+        <tr>
+            <td><%= error[:album_title] || 'N/A' %></td>
+            <td><%= error[:error_message] || 'N/A' %></td>
+            <td>
+                <% if error[:blob] %>
+                    Key: <%= error[:blob][:key] %><br>
+                    Filename: <%= error[:blob][:filename] %>
+                <% else %>
+                    N/A
+                <% end %>
+            </td>
+            <td>
+                <% if error[:backtrace].is_a?(Array) %>
+                  <ul>
+                    <% error[:backtrace].each do |line| %>
+                      <li><%= line %></li>
+                    <% end %>
+                  </ul>
+                <% else %>
+                  <%= error[:backtrace] || 'N/A' %>
+                <% end %>
+            </td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>
+<% end %>
+
+<style>
+    /* Título Resumen */
+    p {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    /* Estilos de tabla */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        margin-bottom: 30px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+        padding: 10px 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f5f5f5;
+        color: #333;
+        font-weight: 600;
+    }
+
+    td {
+        color: #555;
+    }
+
+    /* Estilos para sección de errores */
+    h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #d9534f; /* Color rojo para errores */
+        margin-bottom: 10px;
+    }
+</style>
