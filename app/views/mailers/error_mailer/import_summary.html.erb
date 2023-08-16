@@ -29,10 +29,6 @@
         <td><%= @info[:user] || '' %></td>
     </tr>
     <tr>
-        <td>Total de Filas</td>
-        <td><%= @info[:total_rows] || '' %></td>
-    </tr>
-    <tr>
         <td>Álbumes exitosos</td>
         <td><%= @info[:successful_albums] || '' %></td>
     </tr>
@@ -43,18 +39,6 @@
     <tr>
         <td>Duración total</td>
         <td><%= @info[:total_duration] || '' %></td>
-    </tr>
-    <tr>
-        <td>Uso de RAM</td>
-        <td><%= @info[:monitor_system][:ram] || '' %></td>
-    </tr>
-    <tr>
-        <td>Uso de CPU</td>
-        <td><%= @info[:monitor_system][:cpu_usage] || '' %></td>
-    </tr>
-    <tr>
-        <td>Carga del sistema</td>
-        <td><%= @info[:monitor_system][:laoad_avg] || '' %></td>
     </tr>
 </table>
 
@@ -99,6 +83,7 @@
     </tbody>
 </table>
 <% end %>
+
 
 <style>
     /* Título Resumen */
