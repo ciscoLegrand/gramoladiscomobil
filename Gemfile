@@ -89,3 +89,4 @@ gem 'pagy'
 gem 'tty-progressbar'
 gem 'smarter_csv'
 gem 'sidekiq'
+gem 'whenever', require: false
