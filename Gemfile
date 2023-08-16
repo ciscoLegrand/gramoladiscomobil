@@ -87,3 +87,6 @@ gem 'aws-sdk-s3', require: false
 gem 'mailjet'
 gem 'pagy'
 gem 'tty-progressbar'
+gem 'smarter_csv'
+gem 'sidekiq'
+gem 'whenever', require: false

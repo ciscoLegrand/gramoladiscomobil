@@ -1,61 +1,18 @@
 <p>Resumen de: <%= @info[:process_name] || '' %></p>
+
 <table>
     <tr>
         <th>Característica</th>
         <th>Valor</th>
     </tr>
-    <tr>
-        <td>Inicio del proceso</td>
-        <td><%= @info[:start_time] || '' %></td>
-    </tr>
-    <tr>
-        <td>Fin del proceso</td>
-        <td><%= @info[:end_time] || '' %></td>
-    </tr>
-    <tr>
-        <td>Entorno</td>
-        <td><%= @info[:environment] || '' %></td>
-    </tr>
-    <tr>
-        <td>Versión de Ruby</td>
-        <td><%= @info[:ruby_version] || '' %></td>
-    </tr>
-    <tr>
-        <td>Versión de Rails</td>
-        <td><%= @info[:rails_version] || '' %></td>
-    </tr>
-    <tr>
-        <td>Usuario</td>
-        <td><%= @info[:user] || '' %></td>
-    </tr>
-    <tr>
-        <td>Total de Filas</td>
-        <td><%= @info[:total_rows] || '' %></td>
-    </tr>
-    <tr>
-        <td>Álbumes exitosos</td>
-        <td><%= @info[:successful_albums] || '' %></td>
-    </tr>
-    <tr>
-        <td>Álbumes fallidos</td>
-        <td><%= @info[:failed_albums] || '' %></td>
-    </tr>
-    <tr>
-        <td>Duración total</td>
-        <td><%= @info[:total_duration] || '' %></td>
-    </tr>
-    <tr>
-        <td>Uso de RAM</td>
-        <td><%= @info[:monitor_system][:ram] || '' %></td>
-    </tr>
-    <tr>
-        <td>Uso de CPU</td>
-        <td><%= @info[:monitor_system][:cpu_usage] || '' %></td>
-    </tr>
-    <tr>
-        <td>Carga del sistema</td>
-        <td><%= @info[:monitor_system][:laoad_avg] || '' %></td>
-    </tr>
+    <% @info.each do |key, value| %>
+        <% unless key == :errors %>
+            <tr>
+                <td><%= key.to_s.humanize %></td>
+                <td><%= value || 'N/A' %></td>
+            </tr>
+        <% end %>
+    <% end %>
 </table>
 
 <!-- Si hay errores, los imprimimos en una tabla aparte -->
@@ -99,6 +56,8 @@
     </tbody>
 </table>
 <% end %>
+
+
 
 <style>
     /* Título Resumen */
