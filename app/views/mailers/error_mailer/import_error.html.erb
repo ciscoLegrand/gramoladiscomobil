@@ -1,54 +1,32 @@
-<h1>Informe de Importación de ActiveStorage desde CSV</h1>
+<% if @error_info.present? %>
+  <h2>Información del error</h2>
 
-<p>Proceso: <%= @info.dig(:process_name) %></p>
-<p>Finalizó en: <%= @info.dig(:end_time) %></p>
-<p>Entorno: <%= @info.dig(:environment) %></p>
-<p>Versión de Ruby: <%= @info.dig(:ruby_version) %></p>
-<p>Versión de Rails: <%= @info.dig(:rails_version) %></p>
-<p>Usuario: <%= @info.dig(:user) %></p>
-<p>Host: <%= @info.dig(:host_info) %></p>
+  <!-- Mensaje del error -->
+  <p>
+    <strong>Mensaje:</strong> <%= @error_info[:error_message] %>
+  </p>
 
-<% if @info[:actions].present? %>
-  <p>Actions:</p>
-  <ul>
-    <% @info[:actions].each do |action| %>
-      <li><%= action %></li>
-    <% end %>
-  </ul>
-<% end %>
+  <!-- Línea del error -->
+  <p>
+    <strong>Línea del backtrace:</strong> <%= @error_info[:error_line] %>
+  </p>
 
-<h2>Blobs no procesados</h2>
-<% if @info[:skipped_blobs]&.any? %>
-  <ul>
-    <% @info[:skipped_blobs].each do |blob| %>
-      <li>
-        <% if blob[:error] %>
-          Key: <%= blob[:blob_data].key %> || Error: <%= blob[:error] %>
-          <ul>
-            <li>Nombre de archivo: <%= blob[:blob_data]&.filename%></li>
-            <li>Tipo de contenido: <%= blob[:blob_data]&.content_type %></li>
-            <li>Metadata: <%= blob[:blob_data]&.metadata %></li>
-            <li>Nombre del servicio: <%= blob[:blob_data]&.service_name %></li>
-            <li>Tamaño en bytes: <%= blob[:blob_data]&.byte_size %></li>
-            <li>Checksum: <%= blob[:blob_data]&.checksum %></li>
-            <li>Creado en: <%= blob[:blob_data]&.created_at %></li>
-          </ul>
-        <% else %>
-          (ID: <%= blob.dig(:blob_data, :id) %>)
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
-<% elsif @info.dig(:error_row)&.present? %>
-  <p>Se han encontrado los siguientes errores: </p>
-  <%= @info.dig(:error_row) %>
+  <!-- Datos que causaron el error -->
+  <p>
+    <strong>Datos que causaron el error:</strong>
+    <pre><%= @error_info[:error_data].inspect %></pre>
+  </p>
+
+  <!-- Si se tienen errores de blobs duplicados -->
+  <% if @error_info[:duplicated_blob_keys] %>
+    <p>
+      <strong>Error en Blobs:</strong> <%= @error_info[:duplicated_blob_keys] %>
+    </p>
+  <% end %>
+
+  <!-- Puedes seguir extendiendo para otros tipos de errores que tengas -->
+  <% # ... %>
+
 <% else %>
-  <p>No hay blobs que se hayan omitido.</p>
-<% end %>
-
-<% unless @exception.nil? %>
-  <p> La tarea ha fallado por la siguiente excepción/es: </p>
-  <%= @exception %>
-  <p> Puedes seguir el backtrace en los siguientes logs: </p>
-  <%= @backtrace %>
+  <p>No hay detalles disponibles para el error.</p>
 <% end %>
