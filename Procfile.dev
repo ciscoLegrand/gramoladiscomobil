@@ -1,2 +1,4 @@
-web: bin/rails server -p 3000
-css: bin/rails tailwindcss:watch
+gramola-web: bin/rails server -p 3000
+tailwind-css: bin/rails tailwindcss:watch
+redis-server: redis-server
+sidekiq-worker: bundle exec sidekiq

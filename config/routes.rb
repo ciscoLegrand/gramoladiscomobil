@@ -1,4 +1,12 @@
+require 'sidekiq'
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   namespace :admin do
     root 'dashboard#index'
     resources :albums do
@@ -51,5 +59,4 @@ Rails.application.routes.draw do
                 omnuauth_callbacks: 'users/omniauth_callbacks',
                 unlocks: 'users/unlocks'
               }
-
 end

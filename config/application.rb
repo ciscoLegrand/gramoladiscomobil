@@ -27,6 +27,8 @@ module Gramoladiscomobil
 
     config.time_zone = 'Europe/Madrid'
 
+    config.active_job.queue_adapter = :sidekiq
+
     config.i18n.available_locales = %i[es en]
     config.i18n.default_locale = :es
     config.i18n.fallbacks = true
