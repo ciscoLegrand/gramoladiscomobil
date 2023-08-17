@@ -5,11 +5,6 @@ require 'csv'
 namespace :import do
   desc "Process CSV to generate array of albums"
   task full_albums: :environment do
-    unless Date.today == Date.new(2023, 8, 16)
-      puts "No es la fecha correcta para ejecutar esta tarea."
-      next
-    end
-
     base_path = Rails.root.join('lib', 'tasks', 'import_active_storage', 'csv_import')
     csv_path = base_path.join('import_albums_galleries_and_images.csv')
 
@@ -54,11 +49,11 @@ namespace :import do
       if total_images != album_data[:total_images]
         puts "❌ Mismatch in image counts #{total_images} for album #{album_data[:album_id]}"
       end
-      job = AlbumImportJob.set(wait: 2.minutes)
+      job = AlbumImportJob.set(wait: 5.minutes)
                           .perform_later(album_data)
       puts "🚧 JOB: #{job.job_id} : Creating album #{album_data[:album_id]} - #{album_data[:album_title]} with #{album_data[:total_images]} data images & #{total_images} real blobs."
       # Sleep con visualización de progreso
-      30.times do
+      10.times do
         print "."
         sleep 1
       end
