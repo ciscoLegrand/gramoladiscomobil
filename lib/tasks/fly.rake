@@ -44,9 +44,9 @@ namespace :fly do
     sh 'swapon /swapfile'
   end
 
-  task :ssh do
-    sh 'fly ssh console --pty -C "sudo -iu rails"'
-  end
+  # task :ssh do
+  #   sh 'fly ssh console --pty -C "sudo -iu rails"'
+  # end
 
   task :console do
     sh 'fly ssh console --pty -C "/rails/bin/rails console"'
@@ -54,5 +54,9 @@ namespace :fly do
 
   task :dbconsole do
     sh 'fly ssh console --pty -C "/rails/bin/rails dbconsole"'
+  end
+
+  task :shell do 
+    sh "fly ssh console --pty -C '/bin/bash'"
   end
 end

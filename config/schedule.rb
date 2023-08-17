@@ -18,7 +18,5 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
-every 1.day, at: '17:45:00' do
-  rake "import:full_albums"
-end
+
 
