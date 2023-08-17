@@ -20,7 +20,12 @@
   <!-- Si se tienen errores de blobs duplicados -->
   <% if @error_info[:duplicated_blob_keys] %>
     <p>
-      <strong>Error en Blobs:</strong> <%= @error_info[:duplicated_blob_keys] %>
+      <strong>Error en Blobs:</strong> 
+      <ul>
+        <% @error_info[:duplicated_blob_keys].each do |blob| %>
+          <li> <%= blob%> </li>
+        <% end %>
+      </ul>
     </p>
   <% end %>
 
