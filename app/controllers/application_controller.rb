@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include Pagy::Backend
+  include Logging
   add_flash_types :success, :error, :alert, :notice
   before_action :authenticate_user!
   before_action :store_host

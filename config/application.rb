@@ -27,8 +27,11 @@ module Gramoladiscomobil
 
     config.time_zone = 'Europe/Madrid'
 
+    config.autoload_paths << Rails.root.join('lib')
+
     config.active_job.queue_adapter = :sidekiq
 
+    config.i18n.load_path += Dir[Rails.root.join('app', 'components', '**', '*.yml')]
     config.i18n.available_locales = %i[es en]
     config.i18n.default_locale = :es
     config.i18n.fallbacks = true
@@ -40,6 +43,8 @@ module Gramoladiscomobil
       gen.orm               :active_record, primary_key_type: :uuid
       gen.system_tests      false
     end
+    config.session_store :cache_store,  key: '_gramola_session'
+    config.session_store :cookie_store, key: '_gramola_session'
 
     config.active_storage.variant_processor = :vips
     # to use component previews in tests
