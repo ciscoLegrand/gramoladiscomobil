@@ -8,6 +8,12 @@
 user = User.find_by(email: "sadmin@test.com")
 
 User.create! email: "sadmin@test.com", password: "test123", role: "admin", confirmed_at: Time.now if user.nil?
+cabin = Category.create! name: "CABINAS", main: true
+light = Category.create! name: "ILUMINACIÓN"
+
+cabin.products.create! name: "CABINA DJ", description: "CABINA DJ", pvp: 100, stock: 1
+light.products.create! name: "Luces fiesta", description: "Luces fiesta", pvp: 100, stock: 1
+
 
 
 # 500.times do
