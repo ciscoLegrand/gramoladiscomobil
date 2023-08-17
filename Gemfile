@@ -81,8 +81,8 @@ gem 'view_component'
 gem 'devise'
 gem 'friendly_id'
 gem 'inline_svg'
-gem 'letter_opener', '~> 1.7'
-gem "dockerfile-rails", ">= 1.5", :group => :development
+gem 'letter_opener', '~> 1.7', group: :development
+gem "dockerfile-rails", ">= 1.5", group: :development
 gem 'aws-sdk-s3', require: false
 gem 'mailjet'
 gem 'pagy'

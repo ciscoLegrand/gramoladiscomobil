@@ -14,7 +14,7 @@ class Contact < ApplicationRecord
 
   def send_email
     mailer = ContactMailer.with(contact: self)
-    mailer.client_email.deliver_later
-    mailer.admin_email.deliver_later
+    mailer.client_email.deliver_now
+    mailer.admin_email.deliver_now
   end
 end
