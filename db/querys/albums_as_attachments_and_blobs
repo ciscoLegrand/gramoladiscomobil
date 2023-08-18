@@ -1,0 +1,42 @@
+WITH GalleryImages AS (
+    SELECT
+        g.id AS gallery_id,
+        g.album_id,
+        asa.blob_id,
+        asa.record_id,
+        jsonb_build_object(
+            'attachment',
+            jsonb_build_object(
+                'blob_id', asa.blob_id,
+                'record_id', asa.record_id
+            ) || 
+            jsonb_build_object(
+                'blob',
+                jsonb_build_object(
+                    'id', asb.id,
+                    'key', asb.key,
+                    'filename', asb.filename,
+                    'content_type', asb.content_type,
+                    'metadata', asb.metadata,
+                    'byte_size', asb.byte_size,
+                    'checksum', asb.checksum,
+                    'created_at', asb.created_at
+                )
+            )
+        ) AS attachment_blob_data
+    FROM galleries g
+    JOIN active_storage_attachments asa ON asa.record_id = g.id AND asa.record_type = 'Gallery' AND asa.name = 'images'
+    JOIN active_storage_blobs asb ON asa.blob_id = asb.id
+)
+
+SELECT
+    a.id AS album_id,
+    a.title AS album_title,
+    a.date_event AS album_date_event,
+    a.password AS album_password,
+    COUNT(gi.attachment_blob_data) OVER (PARTITION BY gi.album_id) AS total_images,
+    jsonb_build_object('album_id', a.id, 'gallery_id', gi.gallery_id) AS gallery_id,
+    gi.attachment_blob_data AS attachment_blob
+FROM GalleryImages gi
+JOIN albums a ON gi.album_id = a.id
+ORDER BY a.id, gi.gallery_id;
