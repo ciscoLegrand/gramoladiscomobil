@@ -17,7 +17,7 @@
     <main class="w-full flex justify-between" data-controller="toogle">
       <%= render 'layouts/shared/notification' %>
       <%= render 'layouts/shared/aside_nav' if user_signed_in? %>
-      <div class="w-full flex flex-col">
+      <div class="w-full flex flex-col py-12 px-24">
         <%= yield %>
       </div>
     </main>
